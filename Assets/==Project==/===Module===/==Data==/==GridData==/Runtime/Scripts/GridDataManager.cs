@@ -4,9 +4,12 @@ namespace Project.Data.Grid
     using UnityEngine;
     using Project.Data;
 
+
     [CreateAssetMenu(fileName = "GridDataManager", menuName = GameConstant.GAME_NAME + "/Grid/GridDataManager")]
     public class GridDataManager : ScriptableObject
     {
+        
+
         #region Public Variables
 
         public List<GridDataAsset> GridsData { get { return _listOfGridData; } }

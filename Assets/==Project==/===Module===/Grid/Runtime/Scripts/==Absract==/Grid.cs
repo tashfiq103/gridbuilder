@@ -1,4 +1,4 @@
-namespace Project.Module.GridBuilder
+namespace Project.Module.Grid
 {
     using UnityEngine;
     using DG.Tweening;
@@ -9,6 +9,7 @@ namespace Project.Module.GridBuilder
 
         public int Row { get; private set; }
         public int Column { get; private set; }
+        public int Index { get; private set; }
 
         #endregion
 
@@ -27,11 +28,9 @@ namespace Project.Module.GridBuilder
 
         #region Public Callback
 
-        public void Initialize(int row, int column, Sprite gridColorSprite, Vector3 localPosition)
+        public void Initialize(int row, int column, int index, Sprite gridColorSprite, Vector3 localPosition)
         {
-            Row = row;
-            Column = column;
-
+            UpdateGridInfo(row, column, index);
             ChangeGridColor(gridColorSprite);
 
             transform.localPosition = localPosition;
@@ -39,6 +38,14 @@ namespace Project.Module.GridBuilder
 
             OnInitialized(row, column);
         }
+
+        public void UpdateGridInfo(int row, int column, int index)
+        {
+            Row = row;
+            Column = column;
+            Index = index;
+        }
+
 
         public void ChangeGridColor(Sprite gridColorSprite)
         {

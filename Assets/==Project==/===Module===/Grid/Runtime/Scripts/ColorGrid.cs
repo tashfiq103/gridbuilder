@@ -1,4 +1,4 @@
-namespace Project.Module.GridBuilder
+namespace Project.Module.Grid
 {
     using UnityEngine;
 

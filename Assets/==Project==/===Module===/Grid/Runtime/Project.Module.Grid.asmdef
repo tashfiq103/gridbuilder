@@ -1,0 +1,18 @@
+{
+    "name": "Project.Module.GridBuilder",
+    "rootNamespace": "",
+    "references": [
+        "GUID:41ee712df84324f4e9dd20d3b3bcd064",
+        "GUID:e41fca18375ba49d78080c61c25403d3",
+        "GUID:4e7c17c01e4ef4061a13a8c8050cdd25"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

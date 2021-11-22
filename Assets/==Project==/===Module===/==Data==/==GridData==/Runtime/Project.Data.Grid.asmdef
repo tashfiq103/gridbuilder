@@ -1,10 +1,8 @@
 {
-    "name": "Project.Data.LevelData",
+    "name": "Project.Data.Grid",
     "rootNamespace": "",
     "references": [
-        "GUID:0f3f53bc9614b4bafabc845d1422d044",
-        "GUID:4e7c17c01e4ef4061a13a8c8050cdd25",
-        "GUID:040ab2f6270c94377b661782c4ab4dfb"
+        "GUID:0f3f53bc9614b4bafabc845d1422d044"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

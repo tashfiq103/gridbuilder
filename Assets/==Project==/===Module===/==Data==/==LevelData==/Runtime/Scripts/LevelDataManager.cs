@@ -14,8 +14,6 @@ namespace Project.Data.LevelData
         public class LevelInformation
         {
             public bool IsBonusLevel { get { return _levelDataAsset.IsBonusLevel; } }
-            public string LevelObjective { get { return _levelDataAsset.LevelObjective; } }
-            public double CompletionReward { get { return _levelDataAsset.CompletionReward; } }
             public SceneReference LevelScene { get { return _levelDataAsset.LevelScene; } }
 
             [SerializeField] private LevelDataAsset _levelDataAsset;

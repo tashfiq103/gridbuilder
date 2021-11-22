@@ -1,22 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Project.Shared;
-
-public class GridBuilderManager : GameBehaviour
+namespace Project.Module.GridBuilder
 {
-    #region ALL UNITY FUNCTIONS
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using Project.Shared;
 
-    #endregion ALL UNITY FUNCTIONS
+    public class GridBuilderManager : GameBehaviour
+    {
+        #region ALL UNITY FUNCTIONS
 
-    //=================================   
-    #region ALL OVERRIDING FUNCTIONS
-    
-    #endregion ALL OVERRIDING FUNCTIONS
+        #endregion ALL UNITY FUNCTIONS
 
-    //=================================
-    #region ALL SELF DECLEAR FUNCTIONS
-    
-    #endregion ALL SELF DECLEAR FUNCTIONS
+        //=================================   
+        #region ALL OVERRIDING FUNCTIONS
 
+        #endregion ALL OVERRIDING FUNCTIONS
+
+        //=================================
+        #region ALL SELF DECLEAR FUNCTIONS
+
+        #endregion ALL SELF DECLEAR FUNCTIONS
+
+    }
 }

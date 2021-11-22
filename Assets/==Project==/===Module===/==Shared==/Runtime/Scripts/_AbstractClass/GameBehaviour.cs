@@ -1,6 +1,7 @@
 namespace Project.Shared
 {
 
+    using System;
     using Toolset.GameEvent;
 
     public abstract class GameBehaviour : GameEventListener
@@ -8,6 +9,9 @@ namespace Project.Shared
         #region Public Variables
 
         public bool IsRegistered { get; private set; }
+
+        public event Action OnEnabledEvent;
+        public event Action OnDisabledEvent;
 
         #endregion
 
@@ -36,6 +40,7 @@ namespace Project.Shared
                 _gameManager.OnShowingCharacterSkinShopEvent.RegisterEvent(this, OnShowingCharacterSkinShop);
             }
 
+            OnEnabledEvent?.Invoke();
         }
 
         protected virtual void OnDisable()
@@ -50,6 +55,8 @@ namespace Project.Shared
                 _gameManager.OnShowingCharacterUnlockPopUpEvent.UnregisterEvent(this);
                 _gameManager.OnShowingCharacterSkinShopEvent.UnregisterEvent(this);
             }
+
+            OnDisabledEvent?.Invoke();
         }
 
         #endregion

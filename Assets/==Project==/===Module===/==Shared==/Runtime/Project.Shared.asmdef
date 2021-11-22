@@ -1,0 +1,20 @@
+{
+    "name": "Project.Shared",
+    "rootNamespace": "",
+    "references": [
+        "GUID:040ab2f6270c94377b661782c4ab4dfb",
+        "GUID:41ee712df84324f4e9dd20d3b3bcd064",
+        "GUID:0f3f53bc9614b4bafabc845d1422d044",
+        "GUID:cebe61a64d67e42a8973e4b9aa968204",
+        "GUID:3d433b5c6e42b4a55a2f3882db0298ea"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

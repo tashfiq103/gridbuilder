@@ -1,0 +1,18 @@
+{
+    "name": "Toolset.GameEvent.Raycast",
+    "rootNamespace": "",
+    "references": [
+        "GUID:040ab2f6270c94377b661782c4ab4dfb",
+        "GUID:1b1fb831c32604c08b2276f71fa574f1",
+        "GUID:41ee712df84324f4e9dd20d3b3bcd064"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

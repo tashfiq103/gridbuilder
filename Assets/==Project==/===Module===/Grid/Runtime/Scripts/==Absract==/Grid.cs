@@ -10,6 +10,7 @@ namespace Project.Module.Grid
         public int Row { get; private set; }
         public int Column { get; private set; }
         public int Index { get; private set; }
+        public Sprite ColorOfGrid { get; private set; }
 
         #endregion
 
@@ -22,7 +23,7 @@ namespace Project.Module.Grid
 
         #region Abstract Method
 
-        protected abstract void OnInitialized(int row, int column);
+        protected abstract void OnPassingIdentity(int row, int column, int index);
 
         #endregion
 
@@ -30,13 +31,10 @@ namespace Project.Module.Grid
 
         public void Initialize(int row, int column, int index, Sprite gridColorSprite, Vector3 localPosition)
         {
-            UpdateGridInfo(row, column, index);
             ChangeGridColor(gridColorSprite);
-
+            UpdateGridInfo(row, column, index);
             transform.localPosition = localPosition;
             Appear();
-
-            OnInitialized(row, column);
         }
 
         public void UpdateGridInfo(int row, int column, int index)
@@ -44,12 +42,15 @@ namespace Project.Module.Grid
             Row = row;
             Column = column;
             Index = index;
+
+            OnPassingIdentity(row, column, index);
         }
 
 
         public void ChangeGridColor(Sprite gridColorSprite)
         {
-            _spriteRendererReference.sprite = gridColorSprite;
+            ColorOfGrid = gridColorSprite;
+            _spriteRendererReference.sprite = ColorOfGrid;
         }
 
         public void Appear() {

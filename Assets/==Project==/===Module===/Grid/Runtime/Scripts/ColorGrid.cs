@@ -6,7 +6,7 @@ namespace Project.Module.Grid
     {
         #region Abstract Method
 
-        protected override void OnInitialized(int row, int column)
+        protected override void OnPassingIdentity(int row, int column, int index)
         {
             
         }

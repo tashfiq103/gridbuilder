@@ -19,19 +19,19 @@ namespace Project.Module.Grid
         {
             base.OnLevelStarted();
 
-            int levelIndex                  = _gameManager.LevelDataManagerReference.GetLevelIndex;
-            _gridDataAssetForCurrentLevel   = _gameManager.GridDataManagerReference.GridsData[levelIndex];
+            int levelIndex = _gameManager.LevelDataManagerReference.GetLevelIndex;
+            _gridDataAssetForCurrentLevel = _gameManager.GridDataManagerReference.GridsData[levelIndex];
 
             FillColorGrid();
 
-            _userInputOnColorGrid.StartRayCasting();
+            _userInputOnColorGrid.Initialize(OnRecievingTheTouchedColorGrid);
         }
 
         protected override void OnLevelEnded()
         {
             base.OnLevelEnded();
 
-            _userInputOnColorGrid.StopRaycasting();
+            _userInputOnColorGrid.RestoreToDefault();
         }
 
         #endregion ALL OVERRIDING FUNCTIONS
@@ -51,6 +51,58 @@ namespace Project.Module.Grid
         #endregion
 
         #region Configuretion
+
+        private bool CheckIfDeadlockCondition()
+        {
+            bool isDeadLock = true;
+            int row = _gridDataAssetForCurrentLevel.Row;
+            int column = _gridDataAssetForCurrentLevel.Column;
+
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                {
+                    int index = (i * row) + j;
+                    ColorGrid colorGrid = (ColorGrid)_listOfColorOnGrid[index];
+
+                    if (colorGrid != null)
+                    {
+                        //if : upper row is valid
+                        if ((i + 1) < row)
+                        {
+                            int upperRowIndex = ((i + 1) * row) + j;
+                            ColorGrid colorGridOnUpperRow = (ColorGrid)_listOfColorOnGrid[upperRowIndex];
+
+                            if (colorGridOnUpperRow != null)
+                            {
+                                if (colorGrid.ColorOfGrid == colorGridOnUpperRow.ColorOfGrid)
+                                {
+                                    isDeadLock = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        //if : Next Column is valid
+                        if ((j + 1) < column)
+                        {
+                            int nextColumnIndex = (i * row) + (j + 1);
+                            ColorGrid colorGridOnNextColumn = (ColorGrid)_listOfColorOnGrid[nextColumnIndex];
+
+                            if (colorGridOnNextColumn != null)
+                            {
+
+                            }
+                        }
+                    }
+
+                    if (isDeadLock)
+                        break;
+                }
+            }
+
+            return isDeadLock;
+        }
 
         private void FillColorGrid()
         {
@@ -77,6 +129,11 @@ namespace Project.Module.Grid
                 }
                 x++;
             }
+        }
+
+        private void OnRecievingTheTouchedColorGrid(Grid touchedGrid)
+        {
+
         }
 
         #endregion

@@ -1,5 +1,6 @@
 namespace Project.Data.Grid
 {
+    using UnityEngine;
     using UnityEditor;
 
     [CustomEditor(typeof(GridDataAsset))]
@@ -50,18 +51,63 @@ namespace Project.Data.Grid
 
             if (_colors.arraySize > 6)
             {
+
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                 {
                     EditorGUILayout.HelpBox("As per documentation, the color should not exceed more than '6'", MessageType.Warning);
+
+                    EditorGUI.BeginChangeCheck();
                     EditorGUILayout.PropertyField(_colors, true);
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        CheckForProperorderOfColorRules();
+                    }
                 }
                 EditorGUILayout.EndVertical();
 
             }
             else
-                EditorGUILayout.PropertyField(_colors);
-
+            {
+                EditorGUI.BeginChangeCheck();
+                EditorGUILayout.PropertyField(_colors, true);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    CheckForProperorderOfColorRules();
+                }
+            }
             serializedObject.ApplyModifiedProperties();
+        }
+
+        #endregion
+
+        #region Configuretion
+
+        private void CheckForProperorderOfColorRules() {
+
+            _colors.serializedObject.ApplyModifiedProperties();
+            int numberOfColor = _colors.arraySize;
+            for (int i = 0; i < numberOfColor; i++)
+            {
+                int numberOfRules = _colors.GetArrayElementAtIndex(i).FindPropertyRelative("_colorSpriteForGroup").arraySize;
+                for (int j = 0; j < numberOfRules - 1; j++)
+                {
+                    int currentValue = _colors.GetArrayElementAtIndex(i).FindPropertyRelative("_colorSpriteForGroup").GetArrayElementAtIndex(j).FindPropertyRelative("_groupSizeGreaterThan").intValue;
+                    int nextValue = _colors.GetArrayElementAtIndex(i).FindPropertyRelative("_colorSpriteForGroup").GetArrayElementAtIndex(j + 1).FindPropertyRelative("_groupSizeGreaterThan").intValue;
+
+                    if (nextValue <= currentValue)
+                    {
+                        nextValue = currentValue + 1;
+                    }
+
+                    _colors.GetArrayElementAtIndex(i).FindPropertyRelative("_colorSpriteForGroup").GetArrayElementAtIndex(j + 1).FindPropertyRelative("_groupSizeGreaterThan").intValue = nextValue;
+                    _colors.GetArrayElementAtIndex(i).FindPropertyRelative("_colorSpriteForGroup").GetArrayElementAtIndex(j + 1).FindPropertyRelative("_groupSizeGreaterThan").serializedObject.ApplyModifiedProperties();
+
+                    //Debug.LogWarning(string.Format("MinGroupSize has to be greater than previous size. Enforcuing to be greater than previous for Color[{0}]_Rules[{1}]", i, j+ 1));
+                }
+                _colors.GetArrayElementAtIndex(i).FindPropertyRelative("_colorSpriteForGroup").serializedObject.ApplyModifiedProperties();
+            }
+
+            _colors.serializedObject.ApplyModifiedProperties();
         }
 
         #endregion

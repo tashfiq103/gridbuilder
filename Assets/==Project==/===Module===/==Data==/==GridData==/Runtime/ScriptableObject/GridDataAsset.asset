@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: GridDataAsset
   m_EditorClassIdentifier: 
   _name: 
-  _row: 4
-  _column: 4
+  _row: 5
+  _column: 8
   _colors:
   - _defaultColorSprite: {fileID: 21300000, guid: 5e1b57a7a5b1a446285085a274c9df1b, type: 3}
     _colorSpriteForGroup:

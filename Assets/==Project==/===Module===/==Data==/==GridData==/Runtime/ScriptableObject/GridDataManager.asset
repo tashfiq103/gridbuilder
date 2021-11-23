@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4ec6444ffda84d26b6f898a1ff67b0d, type: 3}
   m_Name: GridDataManager
   m_EditorClassIdentifier: 
-  _listOfGridData: []
+  _listOfGridData:
+  - {fileID: 11400000, guid: 65c606189be844f2083cb7f6624bf14e, type: 2}

@@ -4,7 +4,7 @@ namespace Toolset.GameEvent.Raycast
     using UnityEngine;
     using com.faith.core;
 
-    public abstract class RaycastEvent : MonoBehaviour
+    public abstract class Raycast2DEvent : MonoBehaviour
     {
         #region Public Variables
 
@@ -12,7 +12,7 @@ namespace Toolset.GameEvent.Raycast
 
         public event Action OnRaycastingStartEvent;
         public event Action OnRaycastingEndEvent;
-        public event Action<RaycastHit> OnRaycastHitEvent;
+        public event Action<RaycastHit2D> OnRaycastHitEvent;
 
         #endregion
 
@@ -28,6 +28,8 @@ namespace Toolset.GameEvent.Raycast
 
 
         [Header("Parameter")]
+        [SerializeField] protected bool _alwaysRaycast = false;
+        [Space(5.0f)]
         [SerializeField, Range(0.1f, 1f)] private float _rayCastFrequency = 0.5f;
         [SerializeField] private LayerMask _rayCastingLayer;
         [SerializeField] private FloatReference _maxDistanceForRay;
@@ -42,7 +44,9 @@ namespace Toolset.GameEvent.Raycast
 
         protected virtual void Awake()
         {
-            _updateThreadForRayCasting = new BatchedUpdateThread(Raycaster);
+            _updateThreadForRayCasting = new BatchedUpdateThread(()=> {
+                Raycaster();
+            });
             _defaultRayCastingLayer = _rayCastingLayer;
             _rayCastUpdateFrequency = (int) Mathf.Lerp(60, 1, _rayCastFrequency);
         }
@@ -56,26 +60,31 @@ namespace Toolset.GameEvent.Raycast
 
         protected virtual void OnDisable()
         {
-            OnRaycastHitEvent -= OnRaycastHit;
+            OnRaycastingStartEvent  -= OnRaycastingStart;
+            OnRaycastHitEvent       -= OnRaycastHit;
+            OnRaycastingEndEvent    -= OnRaycastingEnd;
         }
 
         #endregion
 
         #region Configuretion
 
-        private void Raycaster()
+        protected RaycastHit2D Raycaster()
         {
-            Ray ray = GetRay();
-            RaycastHit raycastHit;
-            if (Physics.Raycast(ray, out raycastHit, _maxDistanceForRay.Value, _rayCastingLayer))
+            Vector3 origin = GetOrigin();
+            Vector3 direction = GetDirection();
+            RaycastHit2D raycastHit = Physics2D.Raycast(origin, direction, _maxDistanceForRay.Value, _rayCastingLayer);
+            if (raycastHit.collider != null)
             {
                 OnRaycastHitEvent.Invoke(raycastHit);
             }
 
 #if UNITY_EDITOR
             if (_showDebugRay)
-                Debug.DrawRay(ray.origin, ray.direction * _maxDistanceForRay.Value, _colorOfDebugRay, _durationOfEachRay.Value); 
+                Debug.DrawRay(origin, direction * _maxDistanceForRay.Value, _colorOfDebugRay, _durationOfEachRay.Value);
 #endif
+
+            return raycastHit;
         }
 
         #endregion
@@ -84,13 +93,17 @@ namespace Toolset.GameEvent.Raycast
 
         public void StartRayCasting()
         {
-            _updateThreadForRayCasting.StartUpdate(_rayCastUpdateFrequency);
+            if(_alwaysRaycast)
+                _updateThreadForRayCasting.StartUpdate(_rayCastUpdateFrequency);
+
             OnRaycastingStartEvent.Invoke();
         }
 
         public void StopRaycasting()
         {
-            _updateThreadForRayCasting.StopUpdate();
+            if (_alwaysRaycast)
+                _updateThreadForRayCasting.StopUpdate();
+
             OnRaycastingEndEvent.Invoke();
         }
 
@@ -108,8 +121,9 @@ namespace Toolset.GameEvent.Raycast
 
         #region Abstract Method
 
-        protected abstract Ray GetRay();
-        protected abstract void OnRaycastHit(RaycastHit raycastHit);
+        protected abstract Vector3 GetOrigin();
+        protected abstract Vector3 GetDirection();
+        protected abstract void OnRaycastHit(RaycastHit2D raycastHit2D);
         protected abstract void OnRaycastingStart();
         protected abstract void OnRaycastingEnd();
 

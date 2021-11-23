@@ -23,6 +23,15 @@ namespace Project.Module.Grid
             _gridDataAssetForCurrentLevel   = _gameManager.GridDataManagerReference.GridsData[levelIndex];
 
             FillColorGrid();
+
+            _userInputOnColorGrid.StartRayCasting();
+        }
+
+        protected override void OnLevelEnded()
+        {
+            base.OnLevelEnded();
+
+            _userInputOnColorGrid.StopRaycasting();
         }
 
         #endregion ALL OVERRIDING FUNCTIONS
@@ -32,6 +41,8 @@ namespace Project.Module.Grid
 
         #region Private Variables
 
+        [Header("Reference  :   External")]
+        [SerializeField] private UserInputOnColorGrid _userInputOnColorGrid;
         [SerializeField] private GameObject _colorGridPrefab;
 
         private GridDataAsset _gridDataAssetForCurrentLevel;

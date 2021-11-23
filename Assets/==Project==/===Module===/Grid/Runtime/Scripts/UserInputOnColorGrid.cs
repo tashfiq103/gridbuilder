@@ -37,16 +37,16 @@ namespace Project.Module.Grid
 
         }
 
-        protected override void RaycastHitOnTouch(RaycastHit2D raycastHit2D)
-        {
-            if(IsAcceptingInput)
-                OnPassingTheGridInfo.Invoke(raycastHit2D.collider.GetComponent<Grid>());
-            
-        }
-
         protected override void RaycastHitOnTouchDown(RaycastHit2D raycastHit2D)
         {
+            if (IsAcceptingInput)
+                OnPassingTheGridInfo.Invoke(raycastHit2D.collider.GetComponent<Grid>());
+        }
 
+        protected override void RaycastHitOnTouch(RaycastHit2D raycastHit2D)
+        {
+            
+            
         }
 
         protected override void RaycastHitOnTouchUp(RaycastHit2D raycastHit2D)

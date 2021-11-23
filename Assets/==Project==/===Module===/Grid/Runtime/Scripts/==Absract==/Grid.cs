@@ -10,7 +10,7 @@ namespace Project.Module.Grid
         public int Row { get; private set; }
         public int Column { get; private set; }
         public int Index { get; private set; }
-        public Sprite ColorOfGrid { get; private set; }
+        public int ColorIndex { get; private set; }
 
         #endregion
 
@@ -29,10 +29,14 @@ namespace Project.Module.Grid
 
         #region Public Callback
 
-        public void Initialize(int row, int column, int index, Sprite gridColorSprite, Vector3 localPosition)
+        public void Initialize(int row, int column, int index, int colorIndex, Sprite gridColorSprite, Vector3 localPosition)
         {
-            ChangeGridColor(gridColorSprite);
             UpdateGridInfo(row, column, index);
+
+            ColorIndex = colorIndex;
+
+            ChangeGridColorVarient(gridColorSprite);
+            
             transform.localPosition = localPosition;
             Appear();
         }
@@ -47,10 +51,9 @@ namespace Project.Module.Grid
         }
 
 
-        public void ChangeGridColor(Sprite gridColorSprite)
+        public void ChangeGridColorVarient(Sprite gridColorSprite)
         {
-            ColorOfGrid = gridColorSprite;
-            _spriteRendererReference.sprite = ColorOfGrid;
+            _spriteRendererReference.sprite = gridColorSprite;
         }
 
         public void Appear() {

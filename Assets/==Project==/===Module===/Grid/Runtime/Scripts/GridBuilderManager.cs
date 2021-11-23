@@ -22,7 +22,7 @@ namespace Project.Module.Grid
             int levelIndex = _gameManager.LevelDataManagerReference.GetLevelIndex;
             _gridDataAssetForCurrentLevel = _gameManager.GridDataManagerReference.GridsData[levelIndex];
 
-            FillColorGrid();
+            FillGridWithColor(true);
 
             _userInputOnColorGrid.Initialize(OnRecievingTheTouchedColorGrid);
         }
@@ -75,7 +75,7 @@ namespace Project.Module.Grid
 
                             if (colorGridOnUpperRow != null)
                             {
-                                if (colorGrid.ColorOfGrid == colorGridOnUpperRow.ColorOfGrid)
+                                if (colorGrid.ColorIndex == colorGridOnUpperRow.ColorIndex)
                                 {
                                     isDeadLock = false;
                                     break;
@@ -91,49 +91,99 @@ namespace Project.Module.Grid
 
                             if (colorGridOnNextColumn != null)
                             {
-
+                                if (colorGrid.ColorIndex == colorGridOnNextColumn.ColorIndex)
+                                {
+                                    isDeadLock = false;
+                                    break;
+                                }
                             }
                         }
                     }
 
-                    if (isDeadLock)
+                    if (!isDeadLock)
                         break;
                 }
             }
 
+            if (isDeadLock)
+                Debug.LogWarning(string.Format("Deadlock Found"));
+
             return isDeadLock;
         }
 
-        private void FillColorGrid()
+        private void FillGridWithColor(bool create)
         {
-            int row = _gridDataAssetForCurrentLevel.Row;
-            int column = _gridDataAssetForCurrentLevel.Column;
-
-            float x = -(row / 2.0f) + 0.5f;
-            for (int i = 0; i < row; i++)
+            do
             {
-                float y = -(column / 2.0f) + 0.5f;
-                for (int j = 0; j < _gridDataAssetForCurrentLevel.Column; j++)
+                int row = _gridDataAssetForCurrentLevel.Row;
+                int column = _gridDataAssetForCurrentLevel.Column;
+
+                float x = -(row / 2.0f) + 0.5f;
+                for (int i = 0; i < row; i++)
                 {
-                    int index = (i * row) + j;
+                    float y = -(column / 2.0f) + 0.5f;
+                    for (int j = 0; j < _gridDataAssetForCurrentLevel.Column; j++)
+                    {
+                        int gridColorIndex = Random.Range(0, _gridDataAssetForCurrentLevel.NumberOfColor);
+                        int index = (i * row) + j;
 
-                    Grid grid = Instantiate(_colorGridPrefab, transform).GetComponent<Grid>();
-                    grid.Initialize(
-                        i,
-                        j,
-                        index,
-                        _gridDataAssetForCurrentLevel.GetRandomDefaultColorSprite(),
-                        new Vector3(y, x, 0));
+                        if (create)
+                        {
+                            Grid grid = Instantiate(_colorGridPrefab, transform).GetComponent<Grid>();
+#if UNITY_EDITOR
+                            grid.gameObject.name = string.Format(
+                                "Grid[{0},{1}]_Index({2})_ColorIndex(3)",
+                                i,
+                                j,
+                                index,
+                                gridColorIndex);
+#endif
 
-                    y++;
+                            grid.Initialize(
+                                i,
+                                j,
+                                index,
+                                gridColorIndex,
+                                _gridDataAssetForCurrentLevel.Colors[gridColorIndex].DefaulColorSprite,
+                                new Vector3(y, x, 0));
+                            _listOfColorOnGrid.Add(grid);
+                        }
+                        else {
+#if UNITY_EDITOR
+                            _listOfColorOnGrid[index].gameObject.name = string.Format(
+                                "Grid[{0},{1}]_Index({2})_ColorIndex(3)",
+                                i,
+                                j,
+                                index,
+                                gridColorIndex);
+#endif
+                            _listOfColorOnGrid[index].Initialize(
+                                    i,
+                                    j,
+                                    index,
+                                    gridColorIndex,
+                                    _gridDataAssetForCurrentLevel.Colors[gridColorIndex].DefaulColorSprite,
+                                    new Vector3(y, x, 0)
+                                );
+                        }
+
+                        y++;
+                    }
+                    x++;
                 }
-                x++;
-            }
+
+            } while (CheckIfDeadlockCondition());
+
         }
 
         private void OnRecievingTheTouchedColorGrid(Grid touchedGrid)
         {
-
+            Debug.Log(string.Format(
+                "Touced Grid({0},{1}) : Index = {2} : ColorIndex = {3}",
+                touchedGrid.Row,
+                touchedGrid.Column,
+                touchedGrid.Index,
+                touchedGrid.ColorIndex));
         }
 
         #endregion

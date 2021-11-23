@@ -277,7 +277,20 @@ namespace Project.Module.Grid
                     if (_gridMapingForPossibleSolution.ContainsKey(_listOfColorOnGrid[index]))
                     {
                         //Merge
-                        Debug.Log("MergeGroup");
+                        Debug.Log("Merge");
+                        //Removing From Dictionary
+                        foreach (Grid grid in _listOfSolution[index])
+                            _gridMapingForPossibleSolution.Remove(grid);
+
+                        foreach (Grid grid in _listOfSolution[nextIndex])
+                            _gridMapingForPossibleSolution.Remove(grid);
+
+
+                        _listOfSolution[index].AddRange(_listOfSolution[nextIndex]);
+                        _listOfSolution.RemoveAt(nextIndex);
+
+                        foreach (Grid grid in _listOfSolution[index])
+                            _gridMapingForPossibleSolution.Add(grid, index);
                     }
                     else {
 

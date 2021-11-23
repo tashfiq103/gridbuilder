@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currencyDataManager: {fileID: 6422762833934621174}
+  _gridDataManager: {fileID: 11400000, guid: 2e3f2ddfecc1e4dc8a5d67ca2ce6a5e4, type: 2}
   _levelDataManager: {fileID: 11400000, guid: 93d3a7e6b392644e1a9fdc763a3b05f2, type: 2}
   _OnDataLoadedEvent: {fileID: 11400000, guid: 0aa8bc16f072a4204861f8d46f66ceb6, type: 2}
   _OnSceneLoadedEvent: {fileID: 11400000, guid: 4a38f2fe70f774de1bbfd29a01be4994, type: 2}

@@ -5,6 +5,7 @@ namespace Project.Shared
     using Project.Data;
     using Project.Data.LevelData;
     using Project.Data.CurrencyData;
+    using Project.Data.Grid;
     using Toolset.GameEvent;
     using com.faith.core;
     
@@ -18,6 +19,7 @@ namespace Project.Shared
 
 
         public CurrencyDataManager CurrencyDataManagerReference { get { return _currencyDataManager; } }
+        public GridDataManager GridDataManagerReference { get { return _gridDataManager; } }
         public LevelDataManager LevelDataManagerReference { get { return _levelDataManager; } }
 
         public GameEvent OnDataLoadedEvent { get { return _OnDataLoadedEvent; } }
@@ -34,6 +36,7 @@ namespace Project.Shared
 
         [Header("LevelData")]
         [SerializeField] private CurrencyDataManager _currencyDataManager;
+        [SerializeField] private GridDataManager _gridDataManager;
         [SerializeField] private LevelDataManager _levelDataManager;
 
         [Header("StateEvent")]

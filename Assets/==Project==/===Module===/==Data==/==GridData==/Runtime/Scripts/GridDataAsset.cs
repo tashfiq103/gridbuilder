@@ -11,7 +11,7 @@ namespace Project.Data.Grid
         #region Custom Variables
 
         [System.Serializable]
-        private class GridColorGroup
+        public class GridColorGroup
         {
             #region Public Variables
 
@@ -29,7 +29,7 @@ namespace Project.Data.Grid
         }
 
         [System.Serializable]
-        private class GridColor
+        public class GridColor
         {
             #region Public Variables
 
@@ -49,11 +49,29 @@ namespace Project.Data.Grid
 
         #endregion
 
+        #region Public Variables
+
+        public int NumberOfColor { get { return _colors.Count; } }
+        public int Row { get { return _row; } }
+        public int Column { get { return _column; } }
+        public List<GridColor> Colors { get { return _colors; } }
+
+        #endregion
+
         #region Private Variables
 
         [SerializeField, Range(2,10)]   private int _row = 2;
         [SerializeField, Range(2, 10)]  private int _column = 2;
         [SerializeField] private List<GridColor> _colors;
+
+        #endregion
+
+        #region Public Callback
+
+        public Sprite GetRandomDefaultColorSprite()
+        {
+            return _colors[Random.Range(0, NumberOfColor)].DefaulColorSprite;
+        }
 
         #endregion
     }

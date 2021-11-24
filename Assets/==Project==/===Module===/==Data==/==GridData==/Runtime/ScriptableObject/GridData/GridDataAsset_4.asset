@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9da2e6287d3194a6a973bbd17ac9b218, type: 3}
+  m_Name: GridDataAsset_4
+  m_EditorClassIdentifier: 
+  _name: 
+  _colorForColorGrid: {r: 0, g: 0.45490196, b: 0.5568628, a: 1}
+  _colorForObjective: {r: 0.67058825, g: 0.6392157, b: 0, a: 1}
+  _row: 5
+  _column: 8
+  _colors:
+  - {fileID: 11400000, guid: d403e1c3fcf2340c6ad734d03371b532, type: 2}
+  - {fileID: 11400000, guid: ef7f23a24cbd748f6890acadeca5439f, type: 2}
+  - {fileID: 11400000, guid: 04dbbe326bcd34500a933c49370dac85, type: 2}
+  - {fileID: 11400000, guid: 3b00acb4edd67421c966d4bc43e2585c, type: 2}
+  _marker: 0
+  _gridLayout: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

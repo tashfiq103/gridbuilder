@@ -22,7 +22,7 @@ namespace Project.Module.Grid
             int levelIndex = _gameManager.LevelDataManagerReference.GetLevelIndex;
             _gridDataAssetForCurrentLevel = _gameManager.GridDataManagerReference.GridsData[levelIndex];
 
-            FillGridWithColor(true);
+            FillGridWithColor();
 
             _userInputOnColorGrid.Initialize(OnRecievingTheTouchedColorGrid);
         }
@@ -45,11 +45,11 @@ namespace Project.Module.Grid
         [SerializeField] private UserInputOnColorBlock _userInputOnColorGrid;
         [SerializeField] private GameObject _colorGridPrefab;
 
-        private GridDataAsset   _gridDataAssetForCurrentLevel;
-        private List<ColorBlock>      _listOfColorOnGrid;
+        private GridDataAsset               _gridDataAssetForCurrentLevel;
+        private List<ColorBlock>            _listOfColorOnGrid;
 
         private Dictionary<ColorBlock, int> _gridMapingForPossibleSolution;
-        private List<List<ColorBlock>> _listOfSolution;
+        private List<List<ColorBlock>>      _listOfSolution;
 
         #endregion
 
@@ -114,7 +114,7 @@ namespace Project.Module.Grid
             return isDeadLock;
         }
 
-        private void FillGridWithColor(bool create)
+        private void FillGridWithColor()
         {
             _listOfColorOnGrid = new List<ColorBlock>();
 
@@ -132,46 +132,24 @@ namespace Project.Module.Grid
                         int gridColorIndex = Random.Range(0, _gridDataAssetForCurrentLevel.NumberOfColor);
                         int index = (i * column) + j;
 
-                        if (create)
-                        {
-                            ColorBlock grid = Instantiate(_colorGridPrefab, transform).GetComponent<ColorBlock>();
+                        ColorBlock grid = Instantiate(_colorGridPrefab, transform).GetComponent<ColorBlock>();
 #if UNITY_EDITOR
-                            grid.gameObject.name = string.Format(
-                                "Grid[{0},{1}]_Index({2})_ColorIndex({3})",
-                                i,
-                                j,
-                                index,
-                                gridColorIndex);
+                        grid.gameObject.name = string.Format(
+                            "Grid[{0},{1}]_Index({2})_ColorIndex({3})",
+                            i,
+                            j,
+                            index,
+                            gridColorIndex);
 #endif
-                            grid.transform.localPosition = new Vector3(y, row + 0.5f, 0);
-                            grid.Initialize(
-                                i,
-                                j,
-                                index,
-                                _gridDataAssetForCurrentLevel.Colors[gridColorIndex].DefaulColorSprite,
-                                new Vector3(y, x, 0));
-                            grid.SetColorIndex(gridColorIndex);
-                            _listOfColorOnGrid.Add(grid);
-                        }
-                        else {
-#if UNITY_EDITOR
-                            _listOfColorOnGrid[index].gameObject.name = string.Format(
-                                "Grid[{0},{1}]_Index({2})_ColorIndex({3})",
-                                i,
-                                j,
-                                index,
-                                gridColorIndex);
-#endif
-                            _listOfColorOnGrid[index].transform.localPosition = new Vector3(y, x, 0);
-                            _listOfColorOnGrid[index].Initialize(
-                                    i,
-                                    j,
-                                    index,
-                                    _gridDataAssetForCurrentLevel.Colors[gridColorIndex].DefaulColorSprite,
-                                    new Vector3(y, x, 0)
-                                );
-                            _listOfColorOnGrid[index].SetColorIndex(gridColorIndex);
-                        }
+                        grid.transform.localPosition = new Vector3(y, row + 0.5f, 0);
+                        grid.Initialize(
+                            i,
+                            j,
+                            index,
+                            _gridDataAssetForCurrentLevel.Colors[gridColorIndex].DefaulColorSprite,
+                            new Vector3(y, x, 0));
+                        grid.SetColorIndex(gridColorIndex);
+                        _listOfColorOnGrid.Add(grid);
 
                         y++;
                     }
@@ -328,10 +306,12 @@ namespace Project.Module.Grid
             }
         }
 
+        
+
         private void OnRecievingTheTouchedColorGrid(InteractableBlock touchedGrid)
         {
             Debug.Log(string.Format(
-                "Touced Grid({0},{1}) : Index = {2} : ColorIndex = {3}",
+                "Touced Grid({0},{1}) : Index = {2}",
                 touchedGrid.Row,
                 touchedGrid.Column,
                 touchedGrid.Index));

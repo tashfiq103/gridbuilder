@@ -10,41 +10,10 @@ namespace Project.Data.Grid
     {
         #region Custom Variables
 
-        [System.Serializable]
-        public class GridColorGroup
+        public enum Marker
         {
-            #region Public Variables
-
-            public int MinNumberOfGroupSize { get { return _groupSizeGreaterThan + 1; } }
-            public Sprite ColorSprite { get { return _gridColorSprite; } }
-
-            #endregion
-
-            #region Private Variables
-
-            [SerializeField] private int            _groupSizeGreaterThan;
-            [SerializeField] private Sprite         _gridColorSprite;
-
-            #endregion
-        }
-
-        [System.Serializable]
-        public class GridColor
-        {
-            #region Public Variables
-
-            public Sprite               DefaulColorSprite { get { return _defaultColorSprite; } }
-            public List<GridColorGroup> ColorSpriteForGroup { get { return _colorSpriteForGroup; } }
-
-            #endregion
-
-            #region Private Variables
-
-            [SerializeField] private Sprite _defaultColorSprite;
-            [SerializeField] private List<GridColorGroup> _colorSpriteForGroup;
-
-            #endregion
-
+            Color,
+            Objective
         }
 
         #endregion
@@ -54,15 +23,26 @@ namespace Project.Data.Grid
         public int NumberOfColor { get { return _colors.Count; } }
         public int Row { get { return _row; } }
         public int Column { get { return _column; } }
-        public List<GridColor> Colors { get { return _colors; } }
+        public List<InteractableBlockAsset> Colors { get { return _colors; } }
+        public Marker[] GridLayout { get { return _gridLayout; } }
 
         #endregion
 
         #region Private Variables
 
+#if UNITY_EDITOR
+
+        [SerializeField] private Color _colorForColorGrid = new Color(0, 0.4538971f, 0.5566038f, 1);
+        [SerializeField] private Color _colorForObjective = new Color(0.6698113f, 0.6382908f, 0, 1);
+
+#endif
+
         [SerializeField, Range(2,10)]   private int _row = 2;
         [SerializeField, Range(2, 10)]  private int _column = 2;
-        [SerializeField] private List<GridColor> _colors;
+        [SerializeField] private List<InteractableBlockAsset> _colors;
+
+        [SerializeField] private Marker _marker;
+        [SerializeField] private Marker[] _gridLayout = new Marker[1];
 
         #endregion
 

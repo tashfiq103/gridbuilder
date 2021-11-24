@@ -310,7 +310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _userInputOnColorGrid: {fileID: 2040433141}
   _colorGridPrefab: {fileID: 6888201137301174348, guid: 6ab877aa6e7d64ddc886b5b653ab6cdc, type: 3}
-  _gridDataAssetForCurrentLevel: {fileID: 0}
+  _gridDataAssetForCurrentLevel: {fileID: 11400000, guid: 332a7a3b4c1ae4324b477f0c3a2ace07, type: 2}
   _listOfColorOnGrid: []
 --- !u!1 &1687258581
 GameObject:
@@ -499,7 +499,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2040433139}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c14225a7096b046e1b49aec72bc9a7a3, type: 3}
+  m_Script: {fileID: 11500000, guid: 43b18c3d433f14819acfc8d19b292e5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _showDebugRay: 1

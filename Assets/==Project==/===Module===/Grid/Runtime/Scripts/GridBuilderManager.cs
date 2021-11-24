@@ -42,14 +42,14 @@ namespace Project.Module.Grid
         #region Private Variables
 
         [Header("Reference  :   External")]
-        [SerializeField] private UserInputOnColorGrid _userInputOnColorGrid;
+        [SerializeField] private UserInputOnColorBlock _userInputOnColorGrid;
         [SerializeField] private GameObject _colorGridPrefab;
 
-        [SerializeField] private GridDataAsset   _gridDataAssetForCurrentLevel;
-        [SerializeField] private List<Grid>      _listOfColorOnGrid;
+        private GridDataAsset   _gridDataAssetForCurrentLevel;
+        private List<ColorBlock>      _listOfColorOnGrid;
 
-        [SerializeField] private Dictionary<Grid, int> _gridMapingForPossibleSolution;
-        [SerializeField] private List<List<Grid>> _listOfSolution;
+        private Dictionary<ColorBlock, int> _gridMapingForPossibleSolution;
+        private List<List<ColorBlock>> _listOfSolution;
 
         #endregion
 
@@ -66,7 +66,7 @@ namespace Project.Module.Grid
                 for (int j = 0; j < column; j++)
                 {
                     int index = (i * column) + j;
-                    ColorGrid colorGrid = (ColorGrid)_listOfColorOnGrid[index];
+                    ColorBlock colorGrid = _listOfColorOnGrid[index];
 
                     if (colorGrid != null)
                     {
@@ -74,7 +74,7 @@ namespace Project.Module.Grid
                         if ((i + 1) < row)
                         {
                             int upperRowIndex = ((i + 1) * row) + j;
-                            ColorGrid colorGridOnUpperRow = (ColorGrid)_listOfColorOnGrid[upperRowIndex];
+                            ColorBlock colorGridOnUpperRow = _listOfColorOnGrid[upperRowIndex];
 
                             if (colorGridOnUpperRow != null)
                             {
@@ -90,7 +90,7 @@ namespace Project.Module.Grid
                         if ((j + 1) < column)
                         {
                             int nextColumnIndex = (i * column) + (j + 1);
-                            ColorGrid colorGridOnNextColumn = (ColorGrid)_listOfColorOnGrid[nextColumnIndex];
+                            ColorBlock colorGridOnNextColumn = _listOfColorOnGrid[nextColumnIndex];
 
                             if (colorGridOnNextColumn != null)
                             {
@@ -116,7 +116,7 @@ namespace Project.Module.Grid
 
         private void FillGridWithColor(bool create)
         {
-            _listOfColorOnGrid = new List<Grid>();
+            _listOfColorOnGrid = new List<ColorBlock>();
 
             do
             {
@@ -134,7 +134,7 @@ namespace Project.Module.Grid
 
                         if (create)
                         {
-                            Grid grid = Instantiate(_colorGridPrefab, transform).GetComponent<Grid>();
+                            ColorBlock grid = Instantiate(_colorGridPrefab, transform).GetComponent<ColorBlock>();
 #if UNITY_EDITOR
                             grid.gameObject.name = string.Format(
                                 "Grid[{0},{1}]_Index({2})_ColorIndex({3})",
@@ -148,9 +148,9 @@ namespace Project.Module.Grid
                                 i,
                                 j,
                                 index,
-                                gridColorIndex,
                                 _gridDataAssetForCurrentLevel.Colors[gridColorIndex].DefaulColorSprite,
                                 new Vector3(y, x, 0));
+                            grid.SetColorIndex(gridColorIndex);
                             _listOfColorOnGrid.Add(grid);
                         }
                         else {
@@ -167,10 +167,10 @@ namespace Project.Module.Grid
                                     i,
                                     j,
                                     index,
-                                    gridColorIndex,
                                     _gridDataAssetForCurrentLevel.Colors[gridColorIndex].DefaulColorSprite,
                                     new Vector3(y, x, 0)
                                 );
+                            _listOfColorOnGrid[index].SetColorIndex(gridColorIndex);
                         }
 
                         y++;
@@ -185,8 +185,8 @@ namespace Project.Module.Grid
 
         private void CreateListOfPossibleSolution()
         {
-            _gridMapingForPossibleSolution  = new Dictionary<Grid, int>();
-            _listOfSolution = new List<List<Grid>>();
+            _gridMapingForPossibleSolution  = new Dictionary<ColorBlock, int>();
+            _listOfSolution = new List<List<ColorBlock>>();
 
             int row = _gridDataAssetForCurrentLevel.Row;
             int column = _gridDataAssetForCurrentLevel.Column;
@@ -255,8 +255,8 @@ namespace Project.Module.Grid
                         //if : Current is also not in any group
 
                         currentIndexOnSolutionList = _listOfSolution.Count;
-                        _listOfSolution.Add(new List<Grid>());
-                        _listOfSolution[currentIndexOnSolutionList] = new List<Grid>();
+                        _listOfSolution.Add(new List<ColorBlock>());
+                        _listOfSolution[currentIndexOnSolutionList] = new List<ColorBlock>();
                         _listOfSolution[currentIndexOnSolutionList].Add(_listOfColorOnGrid[currentIndex]);
                         _gridMapingForPossibleSolution.Add(_listOfColorOnGrid[currentIndex], currentIndexOnSolutionList);
                     }
@@ -322,20 +322,19 @@ namespace Project.Module.Grid
 
                     for (int j = 0; j < sizeOfGroup; j++)
                     {
-                        _listOfSolution[i][j].ChangeGridColorVarient(colorOfGrid);
+                        _listOfSolution[i][j].ChangeSprite(colorOfGrid);
                     }
                 }
             }
         }
 
-        private void OnRecievingTheTouchedColorGrid(Grid touchedGrid)
+        private void OnRecievingTheTouchedColorGrid(InteractableBlock touchedGrid)
         {
             Debug.Log(string.Format(
                 "Touced Grid({0},{1}) : Index = {2} : ColorIndex = {3}",
                 touchedGrid.Row,
                 touchedGrid.Column,
-                touchedGrid.Index,
-                touchedGrid.ColorIndex));
+                touchedGrid.Index));
 
             
         }

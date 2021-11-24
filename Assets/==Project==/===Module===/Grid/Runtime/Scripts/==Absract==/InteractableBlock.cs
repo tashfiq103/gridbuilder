@@ -3,14 +3,13 @@ namespace Project.Module.Grid
     using UnityEngine;
     using DG.Tweening;
 
-    public abstract class Grid : MonoBehaviour
+    public abstract class InteractableBlock : MonoBehaviour
     {
         #region Public Variables
 
         public int Row { get; private set; }
         public int Column { get; private set; }
         public int Index { get; private set; }
-        public int ColorIndex { get; private set; }
 
         #endregion
 
@@ -29,13 +28,11 @@ namespace Project.Module.Grid
 
         #region Public Callback
 
-        public void Initialize(int row, int column, int index, int colorIndex, Sprite gridColorSprite, Vector3 localPosition)
+        public void Initialize(int row, int column, int index, Sprite sprite, Vector3 localPosition)
         {
             UpdateGridInfo(row, column, index);
 
-            ColorIndex = colorIndex;
-
-            ChangeGridColorVarient(gridColorSprite);
+            ChangeSprite(sprite);
 
             Appear();
             if (transform.localPosition != localPosition)
@@ -55,7 +52,7 @@ namespace Project.Module.Grid
         }
 
 
-        public void ChangeGridColorVarient(Sprite gridColorSprite)
+        public void ChangeSprite(Sprite gridColorSprite)
         {
             _spriteRendererReference.sprite = gridColorSprite;
         }

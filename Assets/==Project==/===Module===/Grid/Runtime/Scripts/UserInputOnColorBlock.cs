@@ -4,7 +4,7 @@ namespace Project.Module.Grid
     using UnityEngine.Events;
     using Toolset.GameEvent.Raycast;
 
-    public class UserInputOnColorGrid : Raycast2DEventFromCamera
+    public class UserInputOnColorBlock : Raycast2DEventFromCamera
     {
 
         #region Public Varibles
@@ -15,7 +15,7 @@ namespace Project.Module.Grid
 
         #region Private Variables
 
-        private UnityAction<Grid> OnPassingTheGridInfo;
+        private UnityAction<InteractableBlock> OnPassingTheGridInfo;
 
 
         #endregion
@@ -40,7 +40,7 @@ namespace Project.Module.Grid
         protected override void RaycastHitOnTouchDown(RaycastHit2D raycastHit2D)
         {
             if (IsAcceptingInput)
-                OnPassingTheGridInfo.Invoke(raycastHit2D.collider.GetComponent<Grid>());
+                OnPassingTheGridInfo.Invoke(raycastHit2D.collider.GetComponent<InteractableBlock>());
         }
 
         protected override void RaycastHitOnTouch(RaycastHit2D raycastHit2D)
@@ -58,7 +58,7 @@ namespace Project.Module.Grid
 
         #region Public Callback
 
-        public void Initialize(UnityAction<Grid> OnPassingTheGridInfo)
+        public void Initialize(UnityAction<InteractableBlock> OnPassingTheGridInfo)
         {
             this.OnPassingTheGridInfo = OnPassingTheGridInfo;
             IsAcceptingInput = true;

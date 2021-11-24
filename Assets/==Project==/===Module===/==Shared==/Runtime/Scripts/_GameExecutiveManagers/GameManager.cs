@@ -5,7 +5,7 @@ namespace Project.Shared
     using Project.Data;
     using Project.Data.LevelData;
     using Project.Data.CurrencyData;
-    using Project.Data.Grid;
+    using Project.Data.PlayableArea;
     using Toolset.GameEvent;
     using com.faith.core;
     

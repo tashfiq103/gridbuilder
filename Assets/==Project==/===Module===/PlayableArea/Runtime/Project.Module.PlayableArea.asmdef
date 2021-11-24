@@ -1,0 +1,21 @@
+{
+    "name": "Project.Module.PlayableArea",
+    "rootNamespace": "",
+    "references": [
+        "GUID:61aab200385e34a66a1bb36aed101e0d",
+        "GUID:41ee712df84324f4e9dd20d3b3bcd064",
+        "GUID:48643932d14ad4dfc9ca6034479d20e4",
+        "GUID:e41fca18375ba49d78080c61c25403d3",
+        "GUID:4e7c17c01e4ef4061a13a8c8050cdd25",
+        "GUID:cebe61a64d67e42a8973e4b9aa968204"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

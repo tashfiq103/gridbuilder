@@ -143,7 +143,7 @@ namespace Project.Module.Grid
                                 index,
                                 gridColorIndex);
 #endif
-
+                            grid.transform.localPosition = new Vector3(y, row + 0.5f, 0);
                             grid.Initialize(
                                 i,
                                 j,
@@ -162,6 +162,7 @@ namespace Project.Module.Grid
                                 index,
                                 gridColorIndex);
 #endif
+                            _listOfColorOnGrid[index].transform.localPosition = new Vector3(y, x, 0);
                             _listOfColorOnGrid[index].Initialize(
                                     i,
                                     j,

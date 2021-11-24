@@ -36,9 +36,13 @@ namespace Project.Module.Grid
             ColorIndex = colorIndex;
 
             ChangeGridColorVarient(gridColorSprite);
-            
-            transform.localPosition = localPosition;
+
             Appear();
+            if (transform.localPosition != localPosition)
+            {
+                transform.DOLocalMove(localPosition, 0.5f);
+            }
+            
         }
 
         public void UpdateGridInfo(int row, int column, int index)

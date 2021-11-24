@@ -1,18 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class ObjectiveBlockAsset : MonoBehaviour
+namespace Project.Data.PlayableArea
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    using UnityEngine;
 
-    // Update is called once per frame
-    void Update()
+    [CreateAssetMenu(fileName = "ObjectiveBlockAsset", menuName = GameConstant.GAME_NAME + "/PlayableArea/Block/ObjectiveBlockAsset")]
+    public class ObjectiveBlockAsset : InteractableBlockAsset
     {
         
     }
 }
+

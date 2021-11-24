@@ -20,10 +20,11 @@ namespace Project.Data.PlayableArea
 
         #region Public Variables
 
-        public int NumberOfColor { get { return _colors.Count; } }
+        public int NumberOfColor { get { return _colorBlocks.Count; } }
         public int Row { get { return _row; } }
         public int Column { get { return _column; } }
-        public List<ColorBlockAsset> Colors { get { return _colors; } }
+        public ObjectiveBlockAsset ObjectiveBlock { get { return _objectiveBlock; } }
+        public List<ColorBlockAsset> ColorBlocks { get { return _colorBlocks; } }
         public Marker[] GridLayout { get { return _gridLayout; } }
 
         #endregion
@@ -39,7 +40,8 @@ namespace Project.Data.PlayableArea
 
         [SerializeField, Range(2,10)]   private int _row = 2;
         [SerializeField, Range(2, 10)]  private int _column = 2;
-        [SerializeField] private List<ColorBlockAsset> _colors;
+        [SerializeField] private ObjectiveBlockAsset _objectiveBlock;
+        [SerializeField] private List<ColorBlockAsset> _colorBlocks;
 
         [SerializeField] private Marker _marker;
         [SerializeField] private Marker[] _gridLayout = new Marker[1];
@@ -50,7 +52,7 @@ namespace Project.Data.PlayableArea
 
         public Sprite GetRandomDefaultColorSprite()
         {
-            return _colors[Random.Range(0, NumberOfColor)].DefaulColorSprite;
+            return _colorBlocks[Random.Range(0, NumberOfColor)].DefaulColorSprite;
         }
 
         #endregion

@@ -43,7 +43,8 @@ namespace Project.Module.PlayableArea
 
         [Header("Reference  :   External")]
         [SerializeField] private UserInputOnColorBlock _userInputOnColorGrid;
-        [SerializeField] private GameObject _colorGridPrefab;
+        [SerializeField] private GameObject _colorBlockPrefab;
+        [SerializeField] private GameObject _objectiveBlockPrefab;
 
         private GridDataAsset               _gridDataAssetForCurrentLevel;
         private List<ColorBlock>            _listOfColorOnGrid;
@@ -132,7 +133,7 @@ namespace Project.Module.PlayableArea
                         int gridColorIndex = Random.Range(0, _gridDataAssetForCurrentLevel.NumberOfColor);
                         int index = (i * column) + j;
 
-                        ColorBlock grid = Instantiate(_colorGridPrefab, transform).GetComponent<ColorBlock>();
+                        ColorBlock grid = Instantiate(_colorBlockPrefab, transform).GetComponent<ColorBlock>();
 #if UNITY_EDITOR
                         grid.gameObject.name = string.Format(
                             "Grid[{0},{1}]_Index({2})_ColorIndex({3})",
@@ -146,7 +147,7 @@ namespace Project.Module.PlayableArea
                             i,
                             j,
                             index,
-                            _gridDataAssetForCurrentLevel.Colors[gridColorIndex].DefaulColorSprite,
+                            _gridDataAssetForCurrentLevel.ColorBlocks[gridColorIndex].DefaulColorSprite,
                             new Vector3(y, x, 0));
                         grid.SetColorIndex(gridColorIndex);
                         _listOfColorOnGrid.Add(grid);
@@ -285,18 +286,18 @@ namespace Project.Module.PlayableArea
                     int colorIndex = _listOfSolution[i][0].ColorIndex;
 
                     int colorSpriteIndex = -1;
-                    Sprite colorOfGrid = _gridDataAssetForCurrentLevel.Colors[colorIndex].DefaulColorSprite;
+                    Sprite colorOfGrid = _gridDataAssetForCurrentLevel.ColorBlocks[colorIndex].DefaulColorSprite;
 
-                    for (int j = 0; j < _gridDataAssetForCurrentLevel.Colors[colorIndex].ColorSpriteForGroup.Count; j++)
+                    for (int j = 0; j < _gridDataAssetForCurrentLevel.ColorBlocks[colorIndex].ColorSpriteForGroup.Count; j++)
                     {
-                        if (sizeOfGroup > _gridDataAssetForCurrentLevel.Colors[colorIndex].ColorSpriteForGroup[j].MinNumberOfGroupSize)
+                        if (sizeOfGroup > _gridDataAssetForCurrentLevel.ColorBlocks[colorIndex].ColorSpriteForGroup[j].MinNumberOfGroupSize)
                         {
                             colorSpriteIndex = j;
                         }
                     }
 
                     if (colorSpriteIndex != -1)
-                        colorOfGrid = _gridDataAssetForCurrentLevel.Colors[colorIndex].ColorSpriteForGroup[colorSpriteIndex].ColorSprite;
+                        colorOfGrid = _gridDataAssetForCurrentLevel.ColorBlocks[colorIndex].ColorSpriteForGroup[colorSpriteIndex].ColorSprite;
 
                     for (int j = 0; j < sizeOfGroup; j++)
                     {

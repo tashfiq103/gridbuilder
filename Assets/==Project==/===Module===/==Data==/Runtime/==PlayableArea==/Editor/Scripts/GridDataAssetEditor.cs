@@ -3,6 +3,7 @@ namespace Project.Data.PlayableArea
     using UnityEngine;
     using UnityEditor;
 
+    [CanEditMultipleObjects]
     [CustomEditor(typeof(GridDataAsset))]
     public class GridDataAssetEditor : Editor
     {
@@ -16,7 +17,8 @@ namespace Project.Data.PlayableArea
         private SerializedProperty _name;
         private SerializedProperty _row;
         private SerializedProperty _column;
-        private SerializedProperty _colors;
+        private SerializedProperty _objectiveBlock;
+        private SerializedProperty _colorBlocks;
         private SerializedProperty _marker;
         private SerializedProperty _gridLayout;
 
@@ -70,7 +72,8 @@ namespace Project.Data.PlayableArea
             _name = serializedObject.FindProperty("_name");
             _row = serializedObject.FindProperty("_row");
             _column = serializedObject.FindProperty("_column");
-            _colors = serializedObject.FindProperty("_colors");
+            _objectiveBlock = serializedObject.FindProperty("_objectiveBlock");
+            _colorBlocks = serializedObject.FindProperty("_colorBlocks");
             _marker = serializedObject.FindProperty("_marker");
             _gridLayout = serializedObject.FindProperty("_gridLayout");
 
@@ -112,20 +115,25 @@ namespace Project.Data.PlayableArea
             }
             EditorGUILayout.EndVertical();
 
-            if (_colors.arraySize > 6)
+            EditorGUILayout.PropertyField(_objectiveBlock);
+            if (_colorBlocks.arraySize > 6)
             {
 
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                 {
                     EditorGUILayout.HelpBox("As per documentation, the color should not exceed more than '6'", MessageType.Warning);
-                    EditorGUILayout.PropertyField(_colors, true);
+                    EditorGUILayout.PropertyField(_colorBlocks, true);
                 }
                 EditorGUILayout.EndVertical();
 
             }
             else
             {
-                EditorGUILayout.PropertyField(_colors, true);
+                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+                {
+                    EditorGUILayout.PropertyField(_colorBlocks, true);
+                }
+                EditorGUILayout.EndVertical();
             }
 
             CoreEditorModule.DrawHorizontalLine();

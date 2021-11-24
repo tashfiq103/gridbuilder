@@ -137,7 +137,7 @@ namespace Project.Module.Grid
                             Grid grid = Instantiate(_colorGridPrefab, transform).GetComponent<Grid>();
 #if UNITY_EDITOR
                             grid.gameObject.name = string.Format(
-                                "Grid[{0},{1}]_Index({2})_ColorIndex(3)",
+                                "Grid[{0},{1}]_Index({2})_ColorIndex({3})",
                                 i,
                                 j,
                                 index,
@@ -156,7 +156,7 @@ namespace Project.Module.Grid
                         else {
 #if UNITY_EDITOR
                             _listOfColorOnGrid[index].gameObject.name = string.Format(
-                                "Grid[{0},{1}]_Index({2})_ColorIndex(3)",
+                                "Grid[{0},{1}]_Index({2})_ColorIndex({3})",
                                 i,
                                 j,
                                 index,
@@ -197,36 +197,31 @@ namespace Project.Module.Grid
             //[ ][ ][ ][ ]
             //------
             //Mapping The Group
-            for (int i = 0; i < row - 1; i++)
+            for (int i = 0; i < row; i++)
             {
-                for (int j = 0; j < column - 1 ; j++)
+                for (int j = 0; j < column ; j++)
                 {
                     int index = (i * column) + j;
                     int nextRowIndex = ((i + 1) * column) + j;
                     int nextColumnIndex = (i * column) + (j + 1);
 
-
-
-
                     //ORDER IS IMPORTANT
-                    Debug.Log(string.Format("Index = {0}, IndexInNextColumn = {1}", index, nextColumnIndex));
-                    CheckAndMap(index, nextColumnIndex);
-                    Debug.Log(string.Format("Index = {0}, IndexInNextRow = {1}", index, nextRowIndex));
-                    CheckAndMap(index, nextRowIndex);
+                    if ((j + 1) < column)
+                    {
+                        CheckAndMap(index, nextColumnIndex);
+                    }
 
+                    if ((i + 1) < row)
+                    {
+                        CheckAndMap(index, nextRowIndex);
+                    }
                 }
-            }
-
-            Debug.Log(string.Format("NumberOfSolution = {0}", _listOfSolution.Count));
-            for (int i = 0; i < _listOfSolution.Count; i++)
-            {
-                Debug.Log(string.Format("Solution[{0}] : GroupSize = {1}", i, _listOfSolution[i].Count));
             }
 
             ColorTheGroup();
         }
 
-        private void CheckAndMap(int index, int nextIndex)
+        private void CheckAndMap(int currentIndex, int nextIndex)
         {
             //--------
             //[ ][ ][ ][ ]
@@ -235,67 +230,64 @@ namespace Project.Module.Grid
             //[ ][ ][ ][ ]
             //------
 
-            if (_listOfColorOnGrid[index].ColorIndex == _listOfColorOnGrid[nextIndex].ColorIndex)
+            if (_listOfColorOnGrid[currentIndex].ColorIndex == _listOfColorOnGrid[nextIndex].ColorIndex)
             {
+                Debug.Log(string.Format("MatchFound {0} == {1}. ColorIndex = {2}", currentIndex, nextIndex, _listOfColorOnGrid[currentIndex].ColorIndex));
 
-                int indexOnList = -1;
+                int currentIndexOnSolutionList = -1;
+                int nextIndexOnSolutionList = -1;
 
-                
-                if (!_gridMapingForPossibleSolution.ContainsKey(_listOfColorOnGrid[nextIndex]))
+                bool isCurrentValueFound    = _gridMapingForPossibleSolution.TryGetValue(_listOfColorOnGrid[currentIndex], out currentIndexOnSolutionList);
+                bool IsNextValueFound       = _gridMapingForPossibleSolution.TryGetValue(_listOfColorOnGrid[nextIndex], out nextIndexOnSolutionList);
+
+                if(isCurrentValueFound)
+                    Debug.Log(string.Format("SolutionListIndex = {0}, for CurrentIndex = {1}", currentIndexOnSolutionList, currentIndex));
+
+                if(IsNextValueFound)
+                    Debug.Log(string.Format("SolutionListIndex = {0}, for NextIndex = {1}", nextIndexOnSolutionList, nextIndex));
+
+                if (!IsNextValueFound)
                 {
                     //if : The next is not include in any group
-
-
-                    if (!_gridMapingForPossibleSolution.ContainsKey(_listOfColorOnGrid[index]))
+                    if (!isCurrentValueFound)
                     {
-                        //if : Me myself not in any group
+                        //if : Current is also not in any group
 
-                        indexOnList = _listOfSolution.Count;
+                        currentIndexOnSolutionList = _listOfSolution.Count;
                         _listOfSolution.Add(new List<Grid>());
-                        _listOfSolution[indexOnList] = new List<Grid>();
-                        _listOfSolution[indexOnList].Add(_listOfColorOnGrid[index]);
-                        _gridMapingForPossibleSolution.Add(_listOfColorOnGrid[index], indexOnList);
-                    }
-                    else
-                    {
-                        if (!_gridMapingForPossibleSolution.TryGetValue(_listOfColorOnGrid[index], out indexOnList))
-                        {
-                            Debug.LogError("Value not found");
-                        }
+                        _listOfSolution[currentIndexOnSolutionList] = new List<Grid>();
+                        _listOfSolution[currentIndexOnSolutionList].Add(_listOfColorOnGrid[currentIndex]);
+                        _gridMapingForPossibleSolution.Add(_listOfColorOnGrid[currentIndex], currentIndexOnSolutionList);
                     }
 
-                    _gridMapingForPossibleSolution.Add(_listOfColorOnGrid[nextIndex], indexOnList);
-                    _listOfSolution[indexOnList].Add(_listOfColorOnGrid[nextIndex]);
+                    _listOfSolution[currentIndexOnSolutionList].Add(_listOfColorOnGrid[nextIndex]);
+                    _gridMapingForPossibleSolution.Add(_listOfColorOnGrid[nextIndex], currentIndexOnSolutionList);
                 }
                 else {
-                    //if : Next is already in group
-                    if (!_gridMapingForPossibleSolution.TryGetValue(_listOfColorOnGrid[nextIndex], out indexOnList))
+
+                    if (!isCurrentValueFound)
                     {
-                        Debug.LogError("Value not found");
-                    }
-
-                    if (_gridMapingForPossibleSolution.ContainsKey(_listOfColorOnGrid[index]))
-                    {
-                        //Merge
-                        Debug.Log("Merge");
-                        //Removing From Dictionary
-                        foreach (Grid grid in _listOfSolution[index])
-                            _gridMapingForPossibleSolution.Remove(grid);
-
-                        foreach (Grid grid in _listOfSolution[nextIndex])
-                            _gridMapingForPossibleSolution.Remove(grid);
-
-
-                        _listOfSolution[index].AddRange(_listOfSolution[nextIndex]);
-                        _listOfSolution.RemoveAt(nextIndex);
-
-                        foreach (Grid grid in _listOfSolution[index])
-                            _gridMapingForPossibleSolution.Add(grid, index);
+                        //if : Next is in group but current is not in group
+                        _listOfSolution[nextIndexOnSolutionList].Add(_listOfColorOnGrid[currentIndex]);
+                        _gridMapingForPossibleSolution.Add(_listOfColorOnGrid[currentIndex], nextIndexOnSolutionList);
                     }
                     else {
 
-                        _gridMapingForPossibleSolution.Add(_listOfColorOnGrid[index], indexOnList);
-                        _listOfSolution[indexOnList].Add(_listOfColorOnGrid[index]);
+                        //if : "Next and Current Both are in a group" && Not the same groupd -> Merge to next group
+
+                        if (currentIndexOnSolutionList != nextIndexOnSolutionList)
+                        {
+                            int sizeOfOfCurrentSolution = _listOfSolution[currentIndexOnSolutionList].Count;
+
+                            for (int i = 0; i < sizeOfOfCurrentSolution; i++)
+                            {
+                                _listOfSolution[nextIndexOnSolutionList].Add(_listOfSolution[currentIndexOnSolutionList][i]);
+                                _gridMapingForPossibleSolution.Remove(_listOfSolution[currentIndexOnSolutionList][i]);
+                                _gridMapingForPossibleSolution.Add(_listOfSolution[currentIndexOnSolutionList][i], nextIndexOnSolutionList);
+                            }
+
+                            _listOfSolution[currentIndexOnSolutionList].Clear();
+                        }
                     }
                 }
             }
@@ -308,25 +300,29 @@ namespace Project.Module.Grid
             for (int i = 0; i < numberOfSolutionList; i++)
             {
                 int sizeOfGroup         = _listOfSolution[i].Count;
-                int colorIndex          = _listOfSolution[i][0].ColorIndex;
 
-                int colorSpriteIndex = -1;
-                Sprite colorOfGrid      = _gridDataAssetForCurrentLevel.Colors[colorIndex].DefaulColorSprite;
-
-                for (int j = 0; j < _gridDataAssetForCurrentLevel.Colors[colorIndex].ColorSpriteForGroup.Count ; j++)
+                if (sizeOfGroup > 0)
                 {
-                    if (sizeOfGroup > _gridDataAssetForCurrentLevel.Colors[colorIndex].ColorSpriteForGroup[j].MinNumberOfGroupSize)
+                    int colorIndex = _listOfSolution[i][0].ColorIndex;
+
+                    int colorSpriteIndex = -1;
+                    Sprite colorOfGrid = _gridDataAssetForCurrentLevel.Colors[colorIndex].DefaulColorSprite;
+
+                    for (int j = 0; j < _gridDataAssetForCurrentLevel.Colors[colorIndex].ColorSpriteForGroup.Count; j++)
                     {
-                        colorSpriteIndex = j;
+                        if (sizeOfGroup > _gridDataAssetForCurrentLevel.Colors[colorIndex].ColorSpriteForGroup[j].MinNumberOfGroupSize)
+                        {
+                            colorSpriteIndex = j;
+                        }
                     }
-                }
 
-                if (colorSpriteIndex != -1)
-                    colorOfGrid = _gridDataAssetForCurrentLevel.Colors[colorIndex].ColorSpriteForGroup[colorSpriteIndex].ColorSprite;
+                    if (colorSpriteIndex != -1)
+                        colorOfGrid = _gridDataAssetForCurrentLevel.Colors[colorIndex].ColorSpriteForGroup[colorSpriteIndex].ColorSprite;
 
-                for (int j = 0; j < sizeOfGroup; j++)
-                {
-                    _listOfSolution[i][j].ChangeGridColorVarient(colorOfGrid);
+                    for (int j = 0; j < sizeOfGroup; j++)
+                    {
+                        _listOfSolution[i][j].ChangeGridColorVarient(colorOfGrid);
+                    }
                 }
             }
         }

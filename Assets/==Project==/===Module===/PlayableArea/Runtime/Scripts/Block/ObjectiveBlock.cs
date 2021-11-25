@@ -12,7 +12,7 @@ namespace Project.Module.PlayableArea
 
         protected override void OnPassingIdentity(int row, int column, int index)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
         #endregion

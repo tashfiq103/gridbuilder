@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: ObjectiveBlockAsset - Ballon
   m_EditorClassIdentifier: 
   _name: 
-  _defaultColorSprite: {fileID: 0}
+  _defaultColorSprite: {fileID: 21300000, guid: 011ddb3ce8149435992db3e12d1951fa, type: 3}

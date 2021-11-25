@@ -309,9 +309,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _userInputOnColorGrid: {fileID: 2040433141}
-  _colorGridPrefab: {fileID: 6888201137301174348, guid: 6ab877aa6e7d64ddc886b5b653ab6cdc, type: 3}
-  _gridDataAssetForCurrentLevel: {fileID: 11400000, guid: 332a7a3b4c1ae4324b477f0c3a2ace07, type: 2}
-  _listOfColorOnGrid: []
+  _colorBlockPrefab: {fileID: 6888201137301174348, guid: 6ab877aa6e7d64ddc886b5b653ab6cdc, type: 3}
+  _objectiveBlockPrefab: {fileID: 6888201137301174348, guid: 74e7216993ef84ade804dcac28052fc5, type: 3}
 --- !u!1 &1687258581
 GameObject:
   m_ObjectHideFlags: 0

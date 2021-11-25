@@ -17,7 +17,8 @@ MonoBehaviour:
   _colorForObjective: {r: 0.67058825, g: 0.6392157, b: 0, a: 1}
   _row: 7
   _column: 5
-  _colors:
+  _objectiveBlock: {fileID: 11400000, guid: 499b218d938864bfcafb7b852cf2823d, type: 2}
+  _colorBlocks:
   - {fileID: 11400000, guid: cda98570e76d946fd8b54c73e269184b, type: 2}
   - {fileID: 11400000, guid: bafbe38ff9e1c41efa3a149f7ccb4eb7, type: 2}
   - {fileID: 11400000, guid: 595a16e80b773409e8e9ea9e1c78af13, type: 2}

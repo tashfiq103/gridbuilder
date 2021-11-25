@@ -10,13 +10,14 @@ namespace Project.Module.PlayableArea
         public int RowIndex { get; private set; }
         public int ColumnIndex { get; private set; }
         public int Index { get; private set; }
+        public bool IsImpactByGravity { get { return _impactByGravity; } }
 
         #endregion
 
         #region Private Variables
 
         [SerializeField] private SpriteRenderer _spriteRendererReference;
-
+        [SerializeField] private bool _impactByGravity = true;
 
         #endregion
 

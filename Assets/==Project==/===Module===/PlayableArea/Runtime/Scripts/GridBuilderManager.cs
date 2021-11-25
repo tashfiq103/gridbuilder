@@ -21,7 +21,7 @@ namespace Project.Module.PlayableArea
             int levelIndex = _gameManager.LevelDataManagerReference.GetLevelIndex;
             _gridDataAssetForCurrentLevel = _gameManager.GridDataManagerReference.GridsData[levelIndex];
 
-            FillGridWithColor();
+            FillTheWholeGrid();
 
             _userInputOnColorGrid.Initialize(OnRecievingTheTouchedColorGrid);
         }
@@ -133,7 +133,37 @@ namespace Project.Module.PlayableArea
             return isDeadLock;
         }
 
-        private void FillGridWithColor()
+        private ColorBlock FillTheGridWithColorBlock(int i, int j, int index)
+        {
+            int row = _gridDataAssetForCurrentLevel.Row;
+            int column = _gridDataAssetForCurrentLevel.Column;
+
+            float x = (-(column / 2.0f) + 0.5f) + Mathf.Lerp(0, column, ((float)j) / column);
+            float y = (-(row / 2.0f) + 0.5f) + Mathf.Lerp(0, row, ((float)i) / row);
+
+            int gridColorIndex = Random.Range(0, _gridDataAssetForCurrentLevel.NumberOfColor);
+            ColorBlock colorBlock = Instantiate(_colorBlockPrefab, transform).GetComponent<ColorBlock>();
+            colorBlock.transform.localPosition = new Vector3(x, row + 0.5f, 0);
+            colorBlock.Initialize(
+                i,
+                j,
+                index,
+                _gridDataAssetForCurrentLevel.ColorBlocks[gridColorIndex].DefaulColorSprite,
+                new Vector3(x, y, 0));
+            colorBlock.SetColorIndex(gridColorIndex);
+            _listOfColorBlock.Add(colorBlock);
+            _listOfBlock.Add(colorBlock);
+#if UNITY_EDITOR
+            colorBlock.gameObject.name = string.Format(
+                "Block[{0},{1}]_Index({2}))",
+                i,
+                j,
+                index);
+#endif
+            return colorBlock;
+        }
+
+        private void FillTheWholeGrid()
         {
             do
             {
@@ -150,10 +180,10 @@ namespace Project.Module.PlayableArea
                 int row = _gridDataAssetForCurrentLevel.Row;
                 int column = _gridDataAssetForCurrentLevel.Column;
 
-                float x = -(row / 2.0f) + 0.5f;
+                float y = -(row / 2.0f) + 0.5f;
                 for (int i = 0; i < row; i++)
                 {
-                    float y = -(column / 2.0f) + 0.5f;
+                    float x = -(column / 2.0f) + 0.5f;
                     for (int j = 0; j < _gridDataAssetForCurrentLevel.Column; j++)
                     {
                         
@@ -164,38 +194,20 @@ namespace Project.Module.PlayableArea
                         {
                             case GridDataAsset.Marker.Color:
 
-                                int gridColorIndex = Random.Range(0, _gridDataAssetForCurrentLevel.NumberOfColor);
-                                ColorBlock colorBlock = Instantiate(_colorBlockPrefab, transform).GetComponent<ColorBlock>();
-                                colorBlock.transform.localPosition = new Vector3(y, row + 0.5f, 0);
-                                colorBlock.Initialize(
-                                    i,
-                                    j,
-                                    index,
-                                    _gridDataAssetForCurrentLevel.ColorBlocks[gridColorIndex].DefaulColorSprite,
-                                    new Vector3(y, x, 0));
-                                colorBlock.SetColorIndex(gridColorIndex);
-                                _listOfColorBlock.Add(colorBlock);
-                                _listOfBlock.Add(colorBlock);
-#if UNITY_EDITOR
-                                colorBlock.gameObject.name = string.Format(
-                                    "Block[{0},{1}]_Index({2}))",
-                                    i,
-                                    j,
-                                    index);
-#endif
+                                FillTheGridWithColorBlock(i, j, index);
 
                                 break;
 
                             case GridDataAsset.Marker.Objective:
 
                                 ObjectiveBlock objectiveBlock = Instantiate(_objectiveBlockPrefab, transform).GetComponent<ObjectiveBlock>();
-                                objectiveBlock.transform.localPosition = new Vector3(y, row + 0.5f, 0);
+                                objectiveBlock.transform.localPosition = new Vector3(x, row + 0.5f, 0);
                                 objectiveBlock.Initialize(
                                     i,
                                     j,
                                     index,
                                     _gridDataAssetForCurrentLevel.ObjectiveBlock.DefaulColorSprite,
-                                    new Vector3(y, x, 0));
+                                    new Vector3(x, y, 0));
                                 _listOfObjectiveBlock.Add(objectiveBlock);
                                 _listOfBlock.Add(objectiveBlock);
 #if UNITY_EDITOR
@@ -208,9 +220,9 @@ namespace Project.Module.PlayableArea
 
                                 break;
                         }
-                        y++;
+                        x++;
                     }
-                    x++;
+                    y++;
                 }
 
             } while (CheckIfDeadlockCondition());
@@ -367,7 +379,109 @@ namespace Project.Module.PlayableArea
 
         private void RefillTheGrid()
         {
+            //[O] //Color
+            //[=] //Objective - Blocker
+            //[O] //Color
+            //[X] //Empty
+            //[X] //Empty (Found)
+            //[O] //Color
+            int row = _gridDataAssetForCurrentLevel.Row;
+            int column = _gridDataAssetForCurrentLevel.Column;
+            List<int> listOfColumnShuffeled = new List<int>();
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                {
+                    if (!listOfColumnShuffeled.Contains(j))
+                    {
+                        int index = (i * column) + j;
+                        if (_listOfBlock[index] == null)
+                        {
+                            List<int> listOfRowIndexToBeSort = new List<int>();
+                            //if : Found Column Need Shuffle
+                            for (int k = i; k < row; k++)
+                            {
+                                int nextRow = (k * column) + j;
+                                listOfRowIndexToBeSort.Add(nextRow);
+                            }
+                            //[0,1,2,3,4]
+                            //[X,X,O,=,O]
+                            // x = 0 : IsEmpty? : Yes
+                            // y = x + 1 (Val = 1): IsEmpty? No
+                            // x = 1 (Val = 1): IsEmpty? : Yes
+                            // y = x + 1 (Val = 2): IsEmpty? : No
+                            // y = InteractableBlock? Yes
+                            // y = IsImpactByGravity? Yes
+                            // Traverse(y = 2) to Bottom(0 : if possible) as possibe
+                            //[0,X,X,=,0]
+                            // x = 2 (Val = 2) : IsEmpty? Yes
+                            // y = x + 1 (Val = 3) : IsEmpty? : No
+                            // y = InteractableBlock?
+                            // y = IsImpactByGravity? : No
+                            // No 'Traverse'
+                            //[0,X,X,=,0]
+                            // x = 3 : IsEmpty? No
+                            // end
+                            List<int> listOfSortedRowIndex = new List<int>(listOfRowIndexToBeSort);
+                            int sizeOfSortedIndex = listOfSortedRowIndex.Count;
+                            for (int x = 0; x < sizeOfSortedIndex - 1; x++)
+                            {
+                                int indexOnRow = (listOfSortedRowIndex[x] * column) + j;
+                                if (_listOfBlock[indexOnRow] == null)
+                                {
+                                    //if : Empty Space
+                                    for (int y = x + 1; y < sizeOfSortedIndex; y++)
+                                    {
+                                        int nextIndexOnRow = (listOfSortedRowIndex[y] * column) + j;
+                                        if (_listOfBlock[nextIndexOnRow] != null)
+                                        {
+                                            //if : Next Row is not empty/null
+                                            InteractableBlock interactableBlock;
+                                            if (_listOfBlock[listOfSortedRowIndex[nextIndexOnRow]].TryGetComponent<InteractableBlock>(out interactableBlock))
+                                            {
+                                                //if : InteractableBlock
+                                                if (interactableBlock.IsImpactByGravity)
+                                                {
+                                                    //if : ImpactByGravity
+                                                    int previousRowIndex = y - 1;
+                                                    while (previousRowIndex > 0)
+                                                    {
+                                                        //While : reverseIndex >= 0
+                                                        int previousIndex = (listOfSortedRowIndex[previousRowIndex] * column) + j;
+                                                        if (_listOfBlock[previousIndex] == null)
+                                                        {
+                                                            //if : Previous block is empty
+                                                            
+                                                            int temp = listOfSortedRowIndex[y];
+                                                            listOfSortedRowIndex[y] = listOfSortedRowIndex[previousRowIndex];
+                                                            listOfSortedRowIndex[y] = temp;
+                                                        }
+                                                        previousRowIndex--;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
 
+                            for (int m = sizeOfSortedIndex - 1; m >= 0; m--)
+                            {
+                                int finalIndex = (listOfSortedRowIndex[m] * column) + j;
+                                if (_listOfBlock[finalIndex] != null)
+                                {
+                                    break;
+                                }else
+                                {
+                                    _listOfBlock[finalIndex] = FillTheGridWithColorBlock(listOfSortedRowIndex[m], j, finalIndex);
+                                }
+                            }
+                        }
+
+                        listOfColumnShuffeled.Add(j);
+                    }
+                }
+            }
         }
 
         private void TryToGetObjectiveBlock(int index)
@@ -437,13 +551,10 @@ namespace Project.Module.PlayableArea
                 int solutionIndex;
                 if (_gridMapingForPossibleSolution.TryGetValue(colorBlock, out solutionIndex))
                 {
+                    _userInputOnColorGrid.SetInputStatus(false);
                     OnTouchedSolution(_listOfSolution[solutionIndex]);
-                    //_userInputOnColorGrid.SetInputStatus(false);
-                    //int numberOfItemInSolution = _listOfSolution[solutionIndex].Count;
-                    //for (int i = 0; i < numberOfItemInSolution; i++)
-                    //{
-                    //    _listOfSolution[solutionIndex][i].Disappear();
-                    //}
+                    RefillTheGrid();
+                    _userInputOnColorGrid.SetInputStatus(true);
                 }
             }
         }

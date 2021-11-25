@@ -135,7 +135,6 @@ namespace Project.Module.PlayableArea
 
         private void FillGridWithColor()
         {
-            
             do
             {
                 if (_listOfBlock != null)
@@ -362,17 +361,91 @@ namespace Project.Module.PlayableArea
             }
         }
 
+        #endregion
+
+        #region Configuretion   :   OnUserInteraction
+
+        private void RefillTheGrid()
+        {
+
+        }
+
+        private void TryToGetObjectiveBlock(int index)
+        {
+            ObjectiveBlock objectiveBlock = null;
+            if (_listOfBlock[index].TryGetComponent<ObjectiveBlock>(out objectiveBlock))
+            {
+                _listOfObjectiveBlock.Remove(objectiveBlock);
+                objectiveBlock.Disappear();
+            }
+        }
+
+        private void OnTouchedSolution(List<ColorBlock> listOfSolution)
+        {
+            int sizeOfSolution = listOfSolution.Count;
+            int row = _gridDataAssetForCurrentLevel.Row;
+            int column = _gridDataAssetForCurrentLevel.Column;
+            for (int i = 0; i < sizeOfSolution; i++)
+            {
+                int index = listOfSolution[i].Index;
+
+                //Upper Row
+                if ((listOfSolution[i].RowIndex + 1) < row)
+                {
+                    int upperRow = ((listOfSolution[i].RowIndex + 1) * column) + listOfSolution[i].ColumnIndex;
+                    TryToGetObjectiveBlock(upperRow);
+                }
+
+                //Down Row
+                if ((listOfSolution[i].RowIndex - 1) >= 0)
+                {
+                    int downRow = ((listOfSolution[i].RowIndex - 1) * column) + listOfSolution[i].ColumnIndex;
+                    TryToGetObjectiveBlock(downRow);
+                }
+
+                //Next Column
+                if ((listOfSolution[i].ColumnIndex + 1) < column)
+                {
+                    int nextColumn = (listOfSolution[i].RowIndex * column) + (listOfSolution[i].ColumnIndex + 1);
+                    TryToGetObjectiveBlock(nextColumn);
+                }
+
+                //Previous Column
+                if ((listOfSolution[i].ColumnIndex - 1) >= 0)
+                {
+                    int previousColumn = (listOfSolution[i].RowIndex * column) + (listOfSolution[i].ColumnIndex - 1);
+                    TryToGetObjectiveBlock(previousColumn);
+                }
+
+                listOfSolution[i].Disappear();
+            }
+        }
+
         
 
         private void OnRecievingTheTouchedColorGrid(InteractableBlock touchedGrid)
         {
             Debug.Log(string.Format(
                 "Touced Grid({0},{1}) : Index = {2}",
-                touchedGrid.Row,
-                touchedGrid.Column,
+                touchedGrid.RowIndex,
+                touchedGrid.ColumnIndex,
                 touchedGrid.Index));
 
-            
+            ColorBlock colorBlock;
+            if (touchedGrid.TryGetComponent<ColorBlock>(out colorBlock))
+            {
+                int solutionIndex;
+                if (_gridMapingForPossibleSolution.TryGetValue(colorBlock, out solutionIndex))
+                {
+                    OnTouchedSolution(_listOfSolution[solutionIndex]);
+                    //_userInputOnColorGrid.SetInputStatus(false);
+                    //int numberOfItemInSolution = _listOfSolution[solutionIndex].Count;
+                    //for (int i = 0; i < numberOfItemInSolution; i++)
+                    //{
+                    //    _listOfSolution[solutionIndex][i].Disappear();
+                    //}
+                }
+            }
         }
 
         #endregion

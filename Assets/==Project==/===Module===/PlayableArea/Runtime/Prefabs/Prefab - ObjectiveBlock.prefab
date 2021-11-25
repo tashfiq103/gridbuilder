@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6888201136803183699}
   - component: {fileID: 6888201136803183696}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: SR - GridColor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 6888201137301174351}
   - component: {fileID: 6413372791317301068}
   - component: {fileID: 8924124070983304692}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Prefab - ObjectiveBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}

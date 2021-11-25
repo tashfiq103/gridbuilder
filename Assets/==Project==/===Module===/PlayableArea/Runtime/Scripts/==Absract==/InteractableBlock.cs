@@ -7,8 +7,8 @@ namespace Project.Module.PlayableArea
     {
         #region Public Variables
 
-        public int Row { get; private set; }
-        public int Column { get; private set; }
+        public int RowIndex { get; private set; }
+        public int ColumnIndex { get; private set; }
         public int Index { get; private set; }
 
         #endregion
@@ -44,8 +44,8 @@ namespace Project.Module.PlayableArea
 
         public void UpdateGridInfo(int row, int column, int index)
         {
-            Row = row;
-            Column = column;
+            RowIndex = row;
+            ColumnIndex = column;
             Index = index;
 
             OnPassingIdentity(row, column, index);
@@ -66,6 +66,13 @@ namespace Project.Module.PlayableArea
         public void Disappear()
         {
             transform.DOScale(0, 0.5f);
+            DOVirtual.DelayedCall(
+                    0.5f,
+                    () =>
+                    {
+                        Destroy(gameObject);
+                    }
+                );
         }
 
 

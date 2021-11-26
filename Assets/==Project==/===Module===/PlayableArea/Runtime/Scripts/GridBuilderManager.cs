@@ -141,7 +141,7 @@ namespace Project.Module.PlayableArea
             float x = (-(column / 2.0f) + 0.5f) + Mathf.Lerp(0, column, ((float)j) / column);
             float y = (-(row / 2.0f) + 0.5f) + Mathf.Lerp(0, row, ((float)i) / row);
 
-            int gridColorIndex = Random.Range(0, _gridDataAssetForCurrentLevel.NumberOfColor);
+            int gridColorIndex = Random.Range(0, _gridDataAssetForCurrentLevel.NumberOfColorBlock);
             ColorBlock colorBlock = Instantiate(_colorBlockPrefab, transform).GetComponent<ColorBlock>();
             colorBlock.transform.localPosition = new Vector3(x, row + 0.5f, 0);
             colorBlock.Initialize(
@@ -189,42 +189,52 @@ namespace Project.Module.PlayableArea
                         
                         int index = (i * column) + j;
 
-                        ColorBlockAsset colorBlockAsset;
-                        ObjectiveBlockAsset objectiveBlockAsset;
+                        if (_gridDataAssetForCurrentLevel.GridLayout[index].GetType() == typeof(ColorBlockAsset))
+                        {
+                            ColorBlockAsset colorBlockAsset = (ColorBlockAsset)System.Convert.ChangeType(_gridDataAssetForCurrentLevel.GridLayout[index], _gridDataAssetForCurrentLevel.GridLayout[index].GetType());
+                            ColorBlock colorBlock = Instantiate(_colorBlockPrefab, transform).GetComponent<ColorBlock>();
+                            colorBlock.transform.localPosition = new Vector3(x, row + 0.5f, 0);
+                            colorBlock.Initialize(
+                                i,
+                                j,
+                                index,
+                                colorBlockAsset.DefaulColorSprite,
+                                new Vector3(x, y, 0));
+                            colorBlock.SetColorIndex(_gridDataAssetForCurrentLevel.GetColorBlockIndex(colorBlockAsset));
+                            _listOfColorBlock.Add(colorBlock);
+                            _listOfBlock.Add(colorBlock);
+#if UNITY_EDITOR
+                            colorBlock.gameObject.name = string.Format(
+                                "ColorBlock[{0},{1}]_Index({2}))",
+                                i,
+                                j,
+                                index);
+#endif
+                        }
+                        else if (_gridDataAssetForCurrentLevel.GridLayout[index].GetType() == typeof(ObjectiveBlockAsset)) {
 
-                        if(_gridDataAssetForCurrentLevel.GridLayout[index])
-
-
-//                        switch (_gridDataAssetForCurrentLevel.GridLayout[index])
-//                        {
-//                            case GridDataAsset.Marker.Color:
-
-//                                FillTheGridWithColorBlock(i, j, index);
-
-//                                break;
-
-//                            case GridDataAsset.Marker.Objective:
-
-//                                ObjectiveBlock objectiveBlock = Instantiate(_objectiveBlockPrefab, transform).GetComponent<ObjectiveBlock>();
-//                                objectiveBlock.transform.localPosition = new Vector3(x, row + 0.5f, 0);
-//                                objectiveBlock.Initialize(
-//                                    i,
-//                                    j,
-//                                    index,
-//                                    _gridDataAssetForCurrentLevel.ObjectiveBlocks.DefaulColorSprite,
-//                                    new Vector3(x, y, 0));
-//                                _listOfObjectiveBlock.Add(objectiveBlock);
-//                                _listOfBlock.Add(objectiveBlock);
-//#if UNITY_EDITOR
-//                                objectiveBlock.gameObject.name = string.Format(
-//                                    "Block[{0},{1}]_Index({2}))",
-//                                    i,
-//                                    j,
-//                                    index);
-//#endif
-
-//                                break;
-//                        }
+                            ObjectiveBlockAsset objectiveBlockAsset = (ObjectiveBlockAsset)System.Convert.ChangeType(_gridDataAssetForCurrentLevel.GridLayout[index], _gridDataAssetForCurrentLevel.GridLayout[index].GetType());
+                            ObjectiveBlock objectiveBlock = Instantiate(_objectiveBlockPrefab, transform).GetComponent<ObjectiveBlock>();
+                            objectiveBlock.transform.localPosition = new Vector3(x, row + 0.5f, 0);
+                            objectiveBlock.Initialize(
+                                i,
+                                j,
+                                index,
+                                objectiveBlockAsset.DefaulColorSprite,
+                                new Vector3(x, y, 0));
+                            _listOfObjectiveBlock.Add(objectiveBlock);
+                            _listOfBlock.Add(objectiveBlock);
+#if UNITY_EDITOR
+                            objectiveBlock.gameObject.name = string.Format(
+                                "ObjectiveBlock[{0},{1}]_Index({2}))",
+                                i,
+                                j,
+                                index);
+#endif
+                        }
+                        else {
+                            Debug.LogError(string.Format("Type unknown. Type = {0}", _gridDataAssetForCurrentLevel.GridLayout[index].GetType()));
+                        }
                         x++;
                     }
                     y++;

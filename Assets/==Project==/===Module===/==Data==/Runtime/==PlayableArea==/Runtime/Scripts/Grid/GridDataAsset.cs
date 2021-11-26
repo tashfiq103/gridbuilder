@@ -11,7 +11,8 @@ namespace Project.Data.PlayableArea
 
         #region Public Variables
 
-        public int NumberOfColor { get { return _colorBlocks.Count; } }
+        public int NumberOfColorBlock { get { return _colorBlocks.Count; } }
+        public int NumberOfObjectiveBlock { get { return _objectiveBlocks.Count; } }
         public int Row { get { return _row; } }
         public int Column { get { return _column; } }
         public List<ObjectiveBlockAsset> ObjectiveBlocks { get { return _objectiveBlocks; } }
@@ -44,7 +45,29 @@ namespace Project.Data.PlayableArea
 
         public Sprite GetRandomDefaultColorSprite()
         {
-            return _colorBlocks[Random.Range(0, NumberOfColor)].DefaulColorSprite;
+            return _colorBlocks[Random.Range(0, NumberOfColorBlock)].DefaulColorSprite;
+        }
+
+        public int GetColorBlockIndex(ColorBlockAsset colorBlockAsset)
+        {
+            for (int i = 0; i < NumberOfColorBlock; i++)
+            {
+                if (_colorBlocks[i] == colorBlockAsset)
+                    return i;
+            }
+
+            return -1;
+        }
+
+        public int GetObjectiveBlockIndex(ObjectiveBlockAsset objectiveBlockAsset)
+        {
+            for (int i = 0; i < NumberOfObjectiveBlock; i++)
+            {
+                if (_objectiveBlocks[i] == objectiveBlockAsset)
+                    return i;
+            }
+
+            return -1;
         }
 
         #endregion

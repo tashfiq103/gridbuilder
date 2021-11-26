@@ -39,7 +39,7 @@ namespace Project.Data.PlayableArea
 #endif
 
         [SerializeField, Range(2,10)]   private int _row = 2;
-        [SerializeField, Range(2, 10)]  private int _column = 2;
+        [SerializeField, Range(2,10)]  private int _column = 2;
         [SerializeField] private ObjectiveBlockAsset _objectiveBlock;
         [SerializeField] private List<ColorBlockAsset> _colorBlocks;
 

@@ -69,7 +69,7 @@ namespace Project.Module.PlayableArea
             int row = _gridDataAssetForCurrentLevel.Row;
             int column = _gridDataAssetForCurrentLevel.Column;
 
-            Debug.Log(string.Format("_listOfBlockCount = {0}", _listOfBlock.Count));
+            //Debug.Log(string.Format("_listOfBlockCount = {0}", _listOfBlock.Count));
 
             for (int i = 0; i < row; i++)
             {
@@ -79,11 +79,11 @@ namespace Project.Module.PlayableArea
 
                     ColorBlock colorBlock;
 
-                    Debug.Log(string.Format("Block({0})", index));
+                    //Debug.Log(string.Format("Block({0})", index));
 
                     if (_listOfBlock[index].TryGetComponent<ColorBlock>(out colorBlock))
                     {
-                        Debug.Log(string.Format("ColorBlock({0})", index));
+                        //Debug.Log(string.Format("ColorBlock({0})", index));
 
                         //if : upper row is valid
                         if ((i + 1) < row)
@@ -93,7 +93,7 @@ namespace Project.Module.PlayableArea
 
                             if (_listOfBlock[upperRowIndex].TryGetComponent<ColorBlock>(out colorBlockOnUpperRow))
                             {
-                                Debug.Log(string.Format("Index = {0}, UpperRowIndex = {1}", index, upperRowIndex));
+                                //Debug.Log(string.Format("Index = {0}, UpperRowIndex = {1}", index, upperRowIndex));
                                 if (colorBlock.ColorIndex == colorBlockOnUpperRow.ColorIndex)
                                 {
                                     isDeadLock = false;
@@ -110,7 +110,7 @@ namespace Project.Module.PlayableArea
 
                             if (_listOfBlock[nextColumnIndex].TryGetComponent<ColorBlock>(out colorBlockOnNextColumn))
                             {
-                                Debug.Log(string.Format("Index = {0}, NextColumnIndex = {1}", index, nextColumnIndex));
+                                //Debug.Log(string.Format("Index = {0}, NextColumnIndex = {1}", index, nextColumnIndex));
                                 if (colorBlock.ColorIndex == colorBlockOnNextColumn.ColorIndex)
                                 {
                                     isDeadLock = false;
@@ -385,18 +385,24 @@ namespace Project.Module.PlayableArea
             //[X] //Empty
             //[X] //Empty (Found)
             //[O] //Color
+            
             int row = _gridDataAssetForCurrentLevel.Row;
             int column = _gridDataAssetForCurrentLevel.Column;
+            Debug.Log(string.Format("Row = {0}, Column = {1}", row, column));
             List<int> listOfColumnShuffeled = new List<int>();
             for (int i = 0; i < row; i++)
             {
                 for (int j = 0; j < column; j++)
                 {
+                    Debug.Log(string.Format("Grid({0},{1})", i, j));
                     if (!listOfColumnShuffeled.Contains(j))
                     {
                         int index = (i * column) + j;
+                        Debug.Log(string.Format("Column = {0}, Not Shuffeked. Index = {0}", j, index));
+                        Debug.Log(string.Format("ListOfBlock[0] : IsEmpty = {1}", index, _listOfBlock[index] == null ? true : false));
                         if (_listOfBlock[index] == null)
                         {
+                            Debug.Log(string.Format("EmptyBlock: Index = {0}", index));
                             List<int> listOfRowIndexToBeSort = new List<int>();
                             //if : Found Column Need Shuffle
                             for (int k = i; k < row; k++)
@@ -423,6 +429,9 @@ namespace Project.Module.PlayableArea
                             // x = 3 : IsEmpty? No
                             // end
                             List<int> listOfSortedRowIndex = new List<int>(listOfRowIndexToBeSort);
+                            foreach (int value in listOfSortedRowIndex)
+                                Debug.Log(string.Format("SortedRowIndex = {0}", value));
+
                             int sizeOfSortedIndex = listOfSortedRowIndex.Count;
                             for (int x = 0; x < sizeOfSortedIndex - 1; x++)
                             {
@@ -476,9 +485,9 @@ namespace Project.Module.PlayableArea
                                     _listOfBlock[finalIndex] = FillTheGridWithColorBlock(listOfSortedRowIndex[m], j, finalIndex);
                                 }
                             }
-                        }
 
-                        listOfColumnShuffeled.Add(j);
+                            listOfColumnShuffeled.Add(j);
+                        }
                     }
                 }
             }
@@ -487,9 +496,10 @@ namespace Project.Module.PlayableArea
         private void TryToGetObjectiveBlock(int index)
         {
             ObjectiveBlock objectiveBlock = null;
-            if (_listOfBlock[index].TryGetComponent<ObjectiveBlock>(out objectiveBlock))
+            if (_listOfBlock[index] != null && _listOfBlock[index].TryGetComponent<ObjectiveBlock>(out objectiveBlock))
             {
                 _listOfObjectiveBlock.Remove(objectiveBlock);
+                _listOfBlock[index] = null;
                 objectiveBlock.Disappear();
             }
         }
@@ -532,7 +542,9 @@ namespace Project.Module.PlayableArea
                 }
 
                 listOfSolution[i].Disappear();
+                _listOfBlock[index] = null;
             }
+
         }
 
         
@@ -548,7 +560,8 @@ namespace Project.Module.PlayableArea
             ColorBlock colorBlock;
             if (touchedGrid.TryGetComponent<ColorBlock>(out colorBlock))
             {
-                int solutionIndex;
+                Debug.Log(string.Format("ColorBlock = {0}", colorBlock.name));
+                int solutionIndex = -1;
                 if (_gridMapingForPossibleSolution.TryGetValue(colorBlock, out solutionIndex))
                 {
                     _userInputOnColorGrid.SetInputStatus(false);
@@ -556,7 +569,13 @@ namespace Project.Module.PlayableArea
                     RefillTheGrid();
                     _userInputOnColorGrid.SetInputStatus(true);
                 }
+                else {
+                    Debug.LogError(string.Format("SolutionIndex = {0}", solutionIndex));
+                }
             }
+            else 
+                Debug.LogError(string.Format("ColorBlock not found"));
+            
         }
 
         #endregion

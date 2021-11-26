@@ -174,11 +174,11 @@ namespace Project.Data.PlayableArea
                     _buttonStyle = new GUIStyle(GUI.skin.button);
                     _buttonStyle.fixedWidth = blockDimension;
                     _buttonStyle.fixedHeight = blockDimension;
-                    for (int i = 0; i < row; i++)
+                    for (int i = row - 1; i >= 0; i--)
                     {
                         EditorGUILayout.BeginHorizontal();
                         {
-                            for (int j = 0; j < column; j++)
+                            for (int j = column - 1; j >= 0; j--)
                             {
                                 int index = (i * column) + j;
 

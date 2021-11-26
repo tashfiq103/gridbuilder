@@ -412,15 +412,14 @@ namespace Project.Module.PlayableArea
             {
                 for (int j = 0; j < column; j++)
                 {
+                    int index = (i * column) + j;
                     Debug.Log(string.Format("Grid({0},{1})", i, j));
-                    if (!listOfColumnShuffeled.Contains(j))
+                    if (_listOfBlock[index] == null)
                     {
-                        int index = (i * column) + j;
-                        Debug.Log(string.Format("Column = {0}, Not Shuffeked. Index = {0}", j, index));
-                        Debug.Log(string.Format("ListOfBlock[0] : IsEmpty = {1}", index, _listOfBlock[index] == null ? true : false));
-                        if (_listOfBlock[index] == null)
+                        Debug.Log(string.Format("EmptyBlock: Index = {0}", index));
+                        if (!listOfColumnShuffeled.Contains(j))
                         {
-                            Debug.Log(string.Format("EmptyBlock: Index = {0}", index));
+                            Debug.Log(string.Format("Column = {0}, Not Shuffled. Index = {1}", j, index));
                             List<int> listOfRowIndexToBeSort = new List<int>();
                             //if : Found Column Need Shuffle
                             for (int k = i; k < row; k++)
@@ -453,37 +452,48 @@ namespace Project.Module.PlayableArea
                             int sizeOfSortedIndex = listOfSortedRowIndex.Count;
                             for (int x = 0; x < sizeOfSortedIndex - 1; x++)
                             {
-                                int indexOnRow = (listOfSortedRowIndex[x] * column) + j;
+                                int indexOnRow = listOfSortedRowIndex[x];
                                 if (_listOfBlock[indexOnRow] == null)
                                 {
+                                    Debug.Log(string.Format("EmptyGridFound = {0}", indexOnRow));
                                     //if : Empty Space
                                     for (int y = x + 1; y < sizeOfSortedIndex; y++)
                                     {
-                                        int nextIndexOnRow = (listOfSortedRowIndex[y] * column) + j;
+                                        int nextIndexOnRow = listOfSortedRowIndex[y];
                                         if (_listOfBlock[nextIndexOnRow] != null)
                                         {
+                                            Debug.Log(string.Format("Name = {0}, NonEmptyGridFound = {1}", _listOfBlock[nextIndexOnRow].name, nextIndexOnRow));
                                             //if : Next Row is not empty/null
                                             InteractableBlock interactableBlock;
-                                            if (_listOfBlock[listOfSortedRowIndex[nextIndexOnRow]].TryGetComponent<InteractableBlock>(out interactableBlock))
+                                            if (_listOfBlock[nextIndexOnRow].TryGetComponent<InteractableBlock>(out interactableBlock))
                                             {
+                                                Debug.Log(string.Format("Name = {0}, IsImpactByGravity = {1}", interactableBlock.name, interactableBlock.IsImpactByGravity));
                                                 //if : InteractableBlock
                                                 if (interactableBlock.IsImpactByGravity)
                                                 {
                                                     //if : ImpactByGravity
-                                                    int previousRowIndex = y - 1;
-                                                    while (previousRowIndex > 0)
+                                                    int currentRowIndex     = y;
+                                                    int previousRowIndex    = y - 1;
+                                                    Debug.Log(string.Format("SortStartingPoint = {0}", listOfSortedRowIndex[currentRowIndex]));
+                                                    while (previousRowIndex >= 0)
                                                     {
                                                         //While : reverseIndex >= 0
-                                                        int previousIndex = (listOfSortedRowIndex[previousRowIndex] * column) + j;
-                                                        if (_listOfBlock[previousIndex] == null)
+                                                        if (_listOfBlock[listOfSortedRowIndex[previousRowIndex]] == null)
                                                         {
                                                             //if : Previous block is empty
-                                                            
-                                                            int temp = listOfSortedRowIndex[y];
-                                                            listOfSortedRowIndex[y] = listOfSortedRowIndex[previousRowIndex];
-                                                            listOfSortedRowIndex[y] = temp;
+
+                                                            int temp = listOfSortedRowIndex[currentRowIndex];
+                                                            listOfSortedRowIndex[currentRowIndex] = listOfSortedRowIndex[previousRowIndex];
+                                                            listOfSortedRowIndex[currentRowIndex] = temp;
+
+                                                            Debug.Log(string.Format("{0} <= Swap => {1}", listOfSortedRowIndex[previousRowIndex], listOfSortedRowIndex[currentRowIndex]));
+
+                                                            currentRowIndex--;
+                                                            previousRowIndex--;
                                                         }
-                                                        previousRowIndex--;
+                                                        else {
+                                                            break;
+                                                        }
                                                     }
                                                 }
                                             }
@@ -494,7 +504,7 @@ namespace Project.Module.PlayableArea
 
                             for (int m = sizeOfSortedIndex - 1; m >= 0; m--)
                             {
-                                int finalIndex = (listOfSortedRowIndex[m] * column) + j;
+                                int finalIndex = listOfSortedRowIndex[m];
                                 if (_listOfBlock[finalIndex] != null)
                                 {
                                     break;

@@ -1,7 +1,9 @@
 namespace Project.Data.PlayableArea
 {
+    using System.Collections.Generic;
     using UnityEngine;
     using UnityEditor;
+    using com.faith.core;
 
     [CanEditMultipleObjects]
     [CustomEditor(typeof(GridDataAsset))]
@@ -11,92 +13,26 @@ namespace Project.Data.PlayableArea
 
         private GridDataAsset _reference;
 
-        private SerializedProperty _colorForColorGrid;
-        private SerializedProperty _colorForObjective;
+        private SerializedProperty _gridBuildOption;
+        private SerializedProperty _selectedInteractableBlockIndex;
+        private SerializedProperty _selectedInteractableBlock;
+        private SerializedProperty _showGridNumber;
 
         private SerializedProperty _name;
         private SerializedProperty _row;
         private SerializedProperty _column;
-        private SerializedProperty _objectiveBlock;
+        private SerializedProperty _objectiveBlocks;
         private SerializedProperty _colorBlocks;
-        private SerializedProperty _marker;
         private SerializedProperty _gridLayout;
 
         private Vector2 _scrollPosition;
-        private Texture2D _1PixelWhiteTexture;
-        private Texture2D _1PixelTextureForColor;
-        private Texture2D _1PixelTextureForObjective;
         private GUIStyle _buttonStyle;
         #endregion
 
-        #region Configuretion
+        #region CustomGUI
 
-        private Texture2D GetBackground(GridDataAsset.Marker marker)
+        private void HeaderGUI()
         {
-            switch (marker)
-            {
-                case GridDataAsset.Marker.Color:
-                    return _1PixelTextureForColor;
-                case GridDataAsset.Marker.Objective:
-                    return _1PixelTextureForObjective;
-                default:
-                    return _1PixelWhiteTexture;
-            }
-        }
-
-        private void MakeTextureForColorGrid()
-        {
-            _1PixelTextureForColor = new Texture2D(1, 1);
-            _1PixelTextureForColor.SetPixel(0, 0, _colorForColorGrid.colorValue);
-            _1PixelTextureForColor.Apply();
-        }
-
-        private void MakeTextureForObjectiveGrid()
-        {
-            _1PixelTextureForObjective = new Texture2D(1, 1);
-            _1PixelTextureForObjective.SetPixel(0, 0, _colorForObjective.colorValue);
-            _1PixelTextureForObjective.Apply();
-        }
-
-        #endregion
-
-        #region Editor
-
-        private void OnEnable()
-        {
-            _reference = (GridDataAsset)target;
-
-            if (_reference == null)
-                return;
-
-            _name = serializedObject.FindProperty("_name");
-            _row = serializedObject.FindProperty("_row");
-            _column = serializedObject.FindProperty("_column");
-            _objectiveBlock = serializedObject.FindProperty("_objectiveBlock");
-            _colorBlocks = serializedObject.FindProperty("_colorBlocks");
-            _marker = serializedObject.FindProperty("_marker");
-            _gridLayout = serializedObject.FindProperty("_gridLayout");
-
-            _colorForColorGrid = serializedObject.FindProperty("_colorForColorGrid");
-            _colorForObjective = serializedObject.FindProperty("_colorForObjective");
-
-            _1PixelWhiteTexture = new Texture2D(1, 1);
-            _1PixelWhiteTexture.SetPixel(0, 0, Color.white);
-            _1PixelWhiteTexture.Apply();
-
-
-            MakeTextureForColorGrid();
-            MakeTextureForObjectiveGrid();
-
-        }
-
-        public override void OnInspectorGUI()
-        {
-            CoreEditorModule.ShowScriptReference(serializedObject);
-            CoreEditorModule.DrawHorizontalLine();
-
-            serializedObject.Update();
-
             EditorGUILayout.PropertyField(_name);
             CoreEditorModule.DrawHorizontalLine();
 
@@ -115,46 +51,37 @@ namespace Project.Data.PlayableArea
             }
             EditorGUILayout.EndVertical();
 
-            EditorGUILayout.PropertyField(_objectiveBlock);
-            if (_colorBlocks.arraySize > 6)
-            {
-
-                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                {
-                    EditorGUILayout.HelpBox("As per documentation, the color should not exceed more than '6'", MessageType.Warning);
-                    EditorGUILayout.PropertyField(_colorBlocks, true);
-                }
-                EditorGUILayout.EndVertical();
-
-            }
-            else
-            {
-                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                {
-                    EditorGUILayout.PropertyField(_colorBlocks, true);
-                }
-                EditorGUILayout.EndVertical();
-            }
-
-            CoreEditorModule.DrawHorizontalLine();
-            EditorGUILayout.PropertyField(_marker);
-
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(_colorForColorGrid);
+            {
+                EditorGUILayout.PropertyField(_objectiveBlocks);
+                if (_colorBlocks.arraySize > 6)
+                {
+                    EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+                    {
+                        EditorGUILayout.HelpBox("As per documentation, the color should not exceed more than '6'", MessageType.Warning);
+                        EditorGUILayout.PropertyField(_colorBlocks, true);
+                    }
+                    EditorGUILayout.EndVertical();
+                }
+                else
+                {
+                    EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+                    {
+                        EditorGUILayout.PropertyField(_colorBlocks, true);
+                    }
+                    EditorGUILayout.EndVertical();
+                }
+            }
             if (EditorGUI.EndChangeCheck())
             {
-                _colorForColorGrid.serializedObject.ApplyModifiedProperties();
-                MakeTextureForColorGrid();
+                _selectedInteractableBlock.objectReferenceValue = null;
+                _selectedInteractableBlock.serializedObject.ApplyModifiedProperties();
             }
+            
+        }
 
-            EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(_colorForObjective);
-            if (EditorGUI.EndChangeCheck())
-            {
-                _colorForObjective.serializedObject.ApplyModifiedProperties();
-                MakeTextureForObjectiveGrid();
-            }
-
+        private void GridBuilderGUI()
+        {
             CoreEditorModule.DrawHorizontalLine();
             int row = _row.intValue;
             int column = _column.intValue;
@@ -169,33 +96,49 @@ namespace Project.Data.PlayableArea
             {
                 EditorGUILayout.BeginVertical();
                 {
+                    bool showGrid = _showGridNumber.boolValue;
                     float screenWidth = Screen.width;
-                    float blockDimension = Mathf.Clamp(screenWidth / column, 80, 120);
+                    float blockDimension = Mathf.Clamp(screenWidth / column, 40,60);
+                    Texture2D defaultTexture = GUI.skin.button.normal.background;
                     _buttonStyle = new GUIStyle(GUI.skin.button);
                     _buttonStyle.fixedWidth = blockDimension;
                     _buttonStyle.fixedHeight = blockDimension;
+                    
                     for (int i = row - 1; i >= 0; i--)
                     {
                         EditorGUILayout.BeginHorizontal();
                         {
                             for (int j = column - 1; j >= 0; j--)
                             {
-                                int index = (i * column) + j;
-
-                                _buttonStyle.normal.background = GetBackground((GridDataAsset.Marker)_gridLayout.GetArrayElementAtIndex(index).enumValueIndex);
-
-                                if (GUILayout.Button(
-                                        string.Format("Grid({0},{1})\n{2}", i, j, (GridDataAsset.Marker)_gridLayout.GetArrayElementAtIndex(index).enumValueIndex),
-                                        _buttonStyle,
-                                        GUILayout.Width(blockDimension),
-                                        GUILayout.Height(blockDimension)
-                                    ))
+                                EditorGUILayout.BeginVertical(GUI.skin.box, GUILayout.Height(blockDimension + (showGrid ? 20 : 0)));
                                 {
-                                    _gridLayout.GetArrayElementAtIndex(index).enumValueIndex = _marker.enumValueIndex;
-                                    _gridLayout.GetArrayElementAtIndex(index).serializedObject.ApplyModifiedProperties();
+                                    int index = (i * column) + j;
 
-                                    _gridLayout.serializedObject.ApplyModifiedProperties();
+                                    if (_gridLayout.GetArrayElementAtIndex(index).objectReferenceValue == null)
+                                        _buttonStyle.normal.background = defaultTexture;
+                                    else
+                                        _buttonStyle.normal.background = _reference.GridLayout[index].DefaulColorSprite.texture;
+
+                                    if (GUILayout.Button(
+                                            "",
+                                            _buttonStyle,
+                                            GUILayout.Width(blockDimension),
+                                            GUILayout.Height(blockDimension)
+                                        ))
+                                    {
+                                        _gridLayout.GetArrayElementAtIndex(index).objectReferenceValue = _selectedInteractableBlock.objectReferenceValue;
+                                        _gridLayout.GetArrayElementAtIndex(index).serializedObject.ApplyModifiedProperties();
+
+                                        _gridLayout.serializedObject.ApplyModifiedProperties();
+                                    }
+
+                                    if (showGrid)
+                                        EditorGUILayout.LabelField(string.Format("Grid({0},{1})", i, j), EditorStyles.boldLabel, GUILayout.Width(blockDimension), GUILayout.Height(20));
+
                                 }
+                                EditorGUILayout.EndVertical();
+
+                                
                             }
                         }
                         EditorGUILayout.EndHorizontal();
@@ -207,6 +150,199 @@ namespace Project.Data.PlayableArea
             EditorGUILayout.EndScrollView();
 
             _gridLayout.serializedObject.ApplyModifiedProperties();
+        }
+
+        private void GridBuilderOptionGUI()
+        {
+            CoreEditorModule.DrawHorizontalLine();
+
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+            {
+                EditorGUILayout.PropertyField(_showGridNumber);
+                _gridBuildOption.intValue = EditorGUILayout.Popup("Build Option", _gridBuildOption.intValue, new string[] { "Random", "Custom" });
+            }
+            EditorGUILayout.EndVertical();
+            CoreEditorModule.DrawHorizontalLine();
+
+            int numberOfColorBlock = _colorBlocks.arraySize;
+            int numberOfObjectiveBlock = _objectiveBlocks.arraySize;
+            int totalNumberOfBlock = numberOfColorBlock + numberOfObjectiveBlock;
+
+            switch (_gridBuildOption.intValue)
+            {
+                case 0:
+
+                    if (GUILayout.Button("Generate Random Grid"))
+                    {
+                        if (_colorBlocks.arraySize >= 1)
+                        {
+                            int row = _row.intValue;
+                            int column = _column.intValue;
+                            int size = row * column;
+
+                            _gridLayout.arraySize = size;
+                            _gridLayout.serializedObject.ApplyModifiedProperties();
+
+                            float probabilityOfColorBlock = numberOfColorBlock / ((float)totalNumberOfBlock);
+                            float probabilityOfObjectiveBlock = numberOfObjectiveBlock / ((float)totalNumberOfBlock);
+
+                            for (int i = 0; i < size; i++)
+                            {
+                                if (probabilityOfColorBlock > probabilityOfObjectiveBlock)
+                                {
+                                    if (Random.Range(0f, 1f) <= probabilityOfColorBlock)
+                                        _gridLayout.GetArrayElementAtIndex(i).objectReferenceValue = _reference.ColorBlocks[Random.Range(0, numberOfColorBlock)];
+                                    else
+                                        _gridLayout.GetArrayElementAtIndex(i).objectReferenceValue = _reference.ObjectiveBlocks[Random.Range(0, numberOfObjectiveBlock)];
+                                }
+                                else {
+                                    if (Random.Range(0f, 1f) <= probabilityOfObjectiveBlock)
+                                        _gridLayout.GetArrayElementAtIndex(i).objectReferenceValue = _reference.ObjectiveBlocks[Random.Range(0, numberOfObjectiveBlock)];
+                                    else
+                                        _gridLayout.GetArrayElementAtIndex(i).objectReferenceValue = _reference.ColorBlocks[Random.Range(0, numberOfColorBlock)];
+                                }
+                                _gridLayout.GetArrayElementAtIndex(i).serializedObject.ApplyModifiedProperties();
+                            }
+
+                            _gridLayout.serializedObject.ApplyModifiedProperties();
+                        }
+                        else
+                            Debug.LogError("Must have at least one color block");
+                    }
+
+                    GridBuilderGUI();
+
+                    break;
+
+                case 1:
+
+                    if (numberOfColorBlock > 0 && totalNumberOfBlock > 0)
+                    {
+                        List<string> blockOption = new List<string>();
+
+                        for (int i = 0; i < numberOfColorBlock; i++)
+                        {
+                            if (_reference.ColorBlocks[i] != null)
+                            {
+                                string name = (string.IsNullOrEmpty(_reference.ColorBlocks[i].Name)) ? string.Format("({0})_NameNotFound", i) : _reference.ColorBlocks[i].Name;
+                                blockOption.Add(string.Format("CB : {0}", name));
+                            }
+                        }
+
+                        for (int i = 0; i < numberOfObjectiveBlock; i++)
+                        {
+                            if (_reference.ObjectiveBlocks[i] != null)
+                            {
+                                string name = (string.IsNullOrEmpty(_reference.ObjectiveBlocks[i].Name)) ? string.Format("({0})_NameNotFound", i) : _reference.ObjectiveBlocks[i].Name;
+                                blockOption.Add(string.Format("OB : {0}", name));
+                            }
+                        }
+
+                        blockOption.Add("NONE");
+
+                        EditorGUILayout.BeginHorizontal(GUI.skin.box);
+                        {
+                            EditorGUI.BeginChangeCheck();
+                            _selectedInteractableBlockIndex.intValue = EditorGUILayout.Popup("Select", _selectedInteractableBlockIndex.intValue, blockOption.ToArray());
+                            if (EditorGUI.EndChangeCheck())
+                            {
+                                _selectedInteractableBlockIndex.serializedObject.ApplyModifiedProperties();
+                                if (_selectedInteractableBlockIndex.intValue < numberOfColorBlock)
+                                {
+                                    _selectedInteractableBlock.objectReferenceValue = _colorBlocks.GetArrayElementAtIndex(_selectedInteractableBlockIndex.intValue).objectReferenceValue;
+                                    _selectedInteractableBlock.serializedObject.ApplyModifiedProperties();
+                                }
+                                else if (_selectedInteractableBlockIndex.intValue >= numberOfColorBlock && _selectedInteractableBlockIndex.intValue < totalNumberOfBlock)
+                                {
+                                    _selectedInteractableBlock.objectReferenceValue = _objectiveBlocks.GetArrayElementAtIndex(_selectedInteractableBlockIndex.intValue - numberOfColorBlock).objectReferenceValue;
+                                    _selectedInteractableBlock.serializedObject.ApplyModifiedProperties();
+                                }
+                                else
+                                {
+
+                                    _selectedInteractableBlock.objectReferenceValue = null;
+                                    _selectedInteractableBlock.serializedObject.ApplyModifiedProperties();
+                                }
+                            }
+
+                            if (GUILayout.Button("Reset Grid", GUILayout.Width(100)))
+                            {
+                                ResetGrid();
+                            }
+                        }
+                        EditorGUILayout.EndHorizontal();
+
+                        if (_selectedInteractableBlock.objectReferenceValue == null)
+                            EditorGUILayout.HelpBox("You must select an option to change grid value", MessageType.Error);
+
+                        GridBuilderGUI();
+                    }
+                    else
+                    {
+                        EditorGUILayout.HelpBox("You must assigned at least one color block to customly build the grid", MessageType.Error);
+                    }
+
+                    
+
+                    break;
+            }
+
+        }
+
+        #endregion
+
+        #region Configuretion
+
+        private void ResetGrid()
+        {
+            int sizeOfGrid = _gridLayout.arraySize;
+            for (int i = 0; i < sizeOfGrid; i++)
+            {
+                _gridLayout.GetArrayElementAtIndex(i).objectReferenceValue = null;
+                _gridLayout.GetArrayElementAtIndex(i).serializedObject.ApplyModifiedProperties();
+            }
+
+            _gridLayout.serializedObject.ApplyModifiedProperties();
+        }
+
+        #endregion
+
+        #region Editor
+
+        private void OnEnable()
+        {
+            _reference = (GridDataAsset)target;
+
+            if (_reference == null)
+                return;
+
+            _gridBuildOption = serializedObject.FindProperty("_gridBuildOption");
+            _selectedInteractableBlock = serializedObject.FindProperty("_selectedInteractableBlock");
+            _selectedInteractableBlockIndex = serializedObject.FindProperty("_selectedInteractableBlockIndex");
+            _showGridNumber = serializedObject.FindProperty("_showGridNumber");
+
+            _name = serializedObject.FindProperty("_name");
+            _row = serializedObject.FindProperty("_row");
+            _column = serializedObject.FindProperty("_column");
+            _objectiveBlocks = serializedObject.FindProperty("_objectiveBlocks");
+            _colorBlocks = serializedObject.FindProperty("_colorBlocks");
+            _gridLayout = serializedObject.FindProperty("_gridLayout");
+
+
+
+        }
+
+
+        public override void OnInspectorGUI()
+        {
+            CoreEditorModule.ShowScriptReference(serializedObject);
+            CoreEditorModule.DrawHorizontalLine();
+
+            serializedObject.Update();
+
+            HeaderGUI();
+
+            GridBuilderOptionGUI();
 
             serializedObject.ApplyModifiedProperties();
         }

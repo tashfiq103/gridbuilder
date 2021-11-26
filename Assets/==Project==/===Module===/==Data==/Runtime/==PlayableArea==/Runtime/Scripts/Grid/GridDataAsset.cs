@@ -8,24 +8,16 @@ namespace Project.Data.PlayableArea
     [CreateAssetMenu(fileName = "GridDataAsset", menuName = GameConstant.GAME_NAME + "/PlayableArea/Grid/GridDataAsset")]
     public class GridDataAsset : EnumAsset
     {
-        #region Custom Variables
-
-        public enum Marker
-        {
-            Color,
-            Objective
-        }
-
-        #endregion
-
+        
         #region Public Variables
 
         public int NumberOfColor { get { return _colorBlocks.Count; } }
         public int Row { get { return _row; } }
         public int Column { get { return _column; } }
-        public ObjectiveBlockAsset ObjectiveBlock { get { return _objectiveBlock; } }
+        public List<ObjectiveBlockAsset> ObjectiveBlocks { get { return _objectiveBlocks; } }
         public List<ColorBlockAsset> ColorBlocks { get { return _colorBlocks; } }
-        public Marker[] GridLayout { get { return _gridLayout; } }
+        public List<InteractableBlockAsset> GridLayout { get { return _gridLayout; } }
+
 
         #endregion
 
@@ -33,18 +25,19 @@ namespace Project.Data.PlayableArea
 
 #if UNITY_EDITOR
 
-        [SerializeField] private Color _colorForColorGrid = new Color(0, 0.4538971f, 0.5566038f, 1);
-        [SerializeField] private Color _colorForObjective = new Color(0.6698113f, 0.6382908f, 0, 1);
+        [SerializeField] private int _gridBuildOption = 0;
+        [SerializeField] private int _selectedInteractableBlockIndex;
+        [SerializeField] private InteractableBlockAsset _selectedInteractableBlock;
+        [SerializeField] private bool _showGridNumber;
 
 #endif
 
-        [SerializeField, Range(2,10)]   private int _row = 2;
-        [SerializeField, Range(2,10)]  private int _column = 2;
-        [SerializeField] private ObjectiveBlockAsset _objectiveBlock;
+        [SerializeField, Range(1,10)]   private int _row = 2;
+        [SerializeField, Range(1,10)]  private int _column = 2;
+        [SerializeField] private List<ObjectiveBlockAsset> _objectiveBlocks;
         [SerializeField] private List<ColorBlockAsset> _colorBlocks;
+        [SerializeField] private List<InteractableBlockAsset> _gridLayout;
 
-        [SerializeField] private Marker _marker;
-        [SerializeField] private Marker[] _gridLayout = new Marker[1];
 
         #endregion
 

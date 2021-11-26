@@ -190,36 +190,36 @@ namespace Project.Module.PlayableArea
                         int index = (i * column) + j;
 
 
-                        switch (_gridDataAssetForCurrentLevel.GridLayout[index])
-                        {
-                            case GridDataAsset.Marker.Color:
+//                        switch (_gridDataAssetForCurrentLevel.GridLayout[index])
+//                        {
+//                            case GridDataAsset.Marker.Color:
 
-                                FillTheGridWithColorBlock(i, j, index);
+//                                FillTheGridWithColorBlock(i, j, index);
 
-                                break;
+//                                break;
 
-                            case GridDataAsset.Marker.Objective:
+//                            case GridDataAsset.Marker.Objective:
 
-                                ObjectiveBlock objectiveBlock = Instantiate(_objectiveBlockPrefab, transform).GetComponent<ObjectiveBlock>();
-                                objectiveBlock.transform.localPosition = new Vector3(x, row + 0.5f, 0);
-                                objectiveBlock.Initialize(
-                                    i,
-                                    j,
-                                    index,
-                                    _gridDataAssetForCurrentLevel.ObjectiveBlock.DefaulColorSprite,
-                                    new Vector3(x, y, 0));
-                                _listOfObjectiveBlock.Add(objectiveBlock);
-                                _listOfBlock.Add(objectiveBlock);
-#if UNITY_EDITOR
-                                objectiveBlock.gameObject.name = string.Format(
-                                    "Block[{0},{1}]_Index({2}))",
-                                    i,
-                                    j,
-                                    index);
-#endif
+//                                ObjectiveBlock objectiveBlock = Instantiate(_objectiveBlockPrefab, transform).GetComponent<ObjectiveBlock>();
+//                                objectiveBlock.transform.localPosition = new Vector3(x, row + 0.5f, 0);
+//                                objectiveBlock.Initialize(
+//                                    i,
+//                                    j,
+//                                    index,
+//                                    _gridDataAssetForCurrentLevel.ObjectiveBlocks.DefaulColorSprite,
+//                                    new Vector3(x, y, 0));
+//                                _listOfObjectiveBlock.Add(objectiveBlock);
+//                                _listOfBlock.Add(objectiveBlock);
+//#if UNITY_EDITOR
+//                                objectiveBlock.gameObject.name = string.Format(
+//                                    "Block[{0},{1}]_Index({2}))",
+//                                    i,
+//                                    j,
+//                                    index);
+//#endif
 
-                                break;
-                        }
+//                                break;
+//                        }
                         x++;
                     }
                     y++;

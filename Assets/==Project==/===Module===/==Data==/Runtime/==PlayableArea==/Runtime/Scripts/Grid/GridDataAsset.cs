@@ -8,7 +8,7 @@ namespace Project.Data.PlayableArea
     [CreateAssetMenu(fileName = "GridDataAsset", menuName = GameConstant.GAME_NAME + "/PlayableArea/Grid/GridDataAsset")]
     public class GridDataAsset : EnumAsset
     {
-        
+
         #region Public Variables
 
         public int NumberOfColor { get { return _colorBlocks.Count; } }
@@ -16,7 +16,7 @@ namespace Project.Data.PlayableArea
         public int Column { get { return _column; } }
         public List<ObjectiveBlockAsset> ObjectiveBlocks { get { return _objectiveBlocks; } }
         public List<ColorBlockAsset> ColorBlocks { get { return _colorBlocks; } }
-        public List<InteractableBlockAsset> GridLayout { get { return _gridLayout; } }
+        public List<Object> GridLayout { get { return _gridLayout; } }
 
 
         #endregion
@@ -36,8 +36,7 @@ namespace Project.Data.PlayableArea
         [SerializeField, Range(1,10)]  private int _column = 2;
         [SerializeField] private List<ObjectiveBlockAsset> _objectiveBlocks;
         [SerializeField] private List<ColorBlockAsset> _colorBlocks;
-        [SerializeField] private List<InteractableBlockAsset> _gridLayout;
-
+        [SerializeField] private List<Object> _gridLayout;
 
         #endregion
 

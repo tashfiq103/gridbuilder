@@ -189,6 +189,11 @@ namespace Project.Module.PlayableArea
                         
                         int index = (i * column) + j;
 
+                        ColorBlockAsset colorBlockAsset;
+                        ObjectiveBlockAsset objectiveBlockAsset;
+
+                        if(_gridDataAssetForCurrentLevel.GridLayout[index])
+
 
 //                        switch (_gridDataAssetForCurrentLevel.GridLayout[index])
 //                        {

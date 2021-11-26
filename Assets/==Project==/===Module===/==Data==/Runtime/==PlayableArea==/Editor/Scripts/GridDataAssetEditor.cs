@@ -117,7 +117,11 @@ namespace Project.Data.PlayableArea
                                     if (_gridLayout.GetArrayElementAtIndex(index).objectReferenceValue == null)
                                         _buttonStyle.normal.background = defaultTexture;
                                     else
-                                        _buttonStyle.normal.background = _reference.GridLayout[index].DefaulColorSprite.texture;
+                                    {
+
+                                        InteractableBlockAsset interactableBlockAsset = (InteractableBlockAsset) System.Convert.ChangeType(_reference.GridLayout[index], _reference.GridLayout[index].GetType());
+                                        _buttonStyle.normal.background = interactableBlockAsset.DefaulColorSprite.texture;
+                                    }
 
                                     if (GUILayout.Button(
                                             "",

@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc3c4dd373b9c4f4c89fb01111513762, type: 3}
-  m_Name: ObjectiveBlockAsset - Ballon
+  m_Name: ObjectiveBlockAsset - Crate
   m_EditorClassIdentifier: 
-  _name: Ballon
-  _defaultColorSprite: {fileID: 21300000, guid: 011ddb3ce8149435992db3e12d1951fa, type: 3}
-  _gravity: 1
+  _name: Crate
+  _defaultColorSprite: {fileID: 21300000, guid: 9c251b64068794c029e88b18b7ca1561, type: 3}
+  _gravity: 0

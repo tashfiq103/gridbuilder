@@ -10,14 +10,13 @@ namespace Project.Module.PlayableArea
         public int RowIndex { get; private set; }
         public int ColumnIndex { get; private set; }
         public int Index { get; private set; }
-        public bool IsImpactByGravity { get { return _impactByGravity; } }
+        public bool IsImpactByGravity { get; private set; }
 
         #endregion
 
         #region Private Variables
 
         [SerializeField] private SpriteRenderer _spriteRendererReference;
-        [SerializeField] private bool _impactByGravity = true;
 
         #endregion
 
@@ -29,9 +28,11 @@ namespace Project.Module.PlayableArea
 
         #region Public Callback
 
-        public void Initialize(int row, int column, int index, Sprite sprite, Vector3 localPosition)
+        public void Initialize(int row, int column, int index, bool gravity, Sprite sprite, Vector3 localPosition)
         {
             UpdateGridInfo(row, column, index);
+
+            IsImpactByGravity = gravity;
 
             ChangeSprite(sprite);
 

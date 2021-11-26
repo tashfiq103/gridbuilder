@@ -13,18 +13,22 @@ MonoBehaviour:
   m_Name: GridDataAsset
   m_EditorClassIdentifier: 
   _name: 
-  _gridBuildOption: 0
-  _selectedInteractableBlockIndex: 0
-  _selectedInteractableBlock: {fileID: 0}
+  _gridBuildOption: 1
+  _selectedInteractableBlockIndex: 1
+  _selectedInteractableBlock: {fileID: 11400000, guid: bafbe38ff9e1c41efa3a149f7ccb4eb7, type: 2}
   _showGridNumber: 0
-  _colorForColorGrid: {r: 0, g: 0.4538971, b: 0.5566038, a: 1}
-  _colorForObjective: {r: 0.6698113, g: 0.6382908, b: 0, a: 1}
-  _row: 2
-  _column: 2
-  _objectiveBlocks: []
-  _colorBlocks: []
+  _row: 6
+  _column: 1
+  _objectiveBlocks:
+  - {fileID: 11400000, guid: 499b218d938864bfcafb7b852cf2823d, type: 2}
+  - {fileID: 11400000, guid: 0925afa1b9206434a8c52d7c7ae44d28, type: 2}
+  _colorBlocks:
+  - {fileID: 11400000, guid: cda98570e76d946fd8b54c73e269184b, type: 2}
+  - {fileID: 11400000, guid: bafbe38ff9e1c41efa3a149f7ccb4eb7, type: 2}
   _gridLayout:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: bafbe38ff9e1c41efa3a149f7ccb4eb7, type: 2}
+  - {fileID: 11400000, guid: cda98570e76d946fd8b54c73e269184b, type: 2}
+  - {fileID: 11400000, guid: cda98570e76d946fd8b54c73e269184b, type: 2}
+  - {fileID: 11400000, guid: bafbe38ff9e1c41efa3a149f7ccb4eb7, type: 2}
+  - {fileID: 11400000, guid: 0925afa1b9206434a8c52d7c7ae44d28, type: 2}
+  - {fileID: 11400000, guid: bafbe38ff9e1c41efa3a149f7ccb4eb7, type: 2}

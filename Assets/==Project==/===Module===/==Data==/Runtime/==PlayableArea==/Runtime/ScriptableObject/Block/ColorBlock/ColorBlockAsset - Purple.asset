@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: 
   _defaultColorSprite: {fileID: 21300000, guid: 5d2230eb6cc5b46ff97d6ded4995b72e, type: 3}
+  _gravity: 1
   _colorSpriteForGroup:
   - _groupSizeGreaterThan: 4
     _gridColorSprite: {fileID: 21300000, guid: 02b80eb910d8c4113bc34dfe17fec5d5, type: 3}

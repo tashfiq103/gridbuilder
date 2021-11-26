@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1235db5bc31344df79af290b04c4bb57, type: 3}
   m_Name: ColorBlockAsset - Green
   m_EditorClassIdentifier: 
-  _name: 
+  _name: Green
   _defaultColorSprite: {fileID: 21300000, guid: 028cf6adf52f14f7dbab4225e616a120, type: 3}
+  _gravity: 1
   _colorSpriteForGroup:
   - _groupSizeGreaterThan: 4
     _gridColorSprite: {fileID: 21300000, guid: 481846453c6fa40089288a5145530800, type: 3}

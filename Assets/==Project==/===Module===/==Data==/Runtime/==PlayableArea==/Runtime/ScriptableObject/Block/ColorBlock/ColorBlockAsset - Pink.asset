@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1235db5bc31344df79af290b04c4bb57, type: 3}
   m_Name: ColorBlockAsset - Pink
   m_EditorClassIdentifier: 
-  _name: 
+  _name: Pink
   _defaultColorSprite: {fileID: 21300000, guid: 2d66fc7374ebc47fdba51f0432b0d449, type: 3}
+  _gravity: 1
   _colorSpriteForGroup:
   - _groupSizeGreaterThan: 4
     _gridColorSprite: {fileID: 21300000, guid: 6b2c01125dca44a8db444af8df1e0737, type: 3}

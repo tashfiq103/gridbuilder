@@ -1,5 +1,6 @@
 namespace Project.Data.PlayableArea
 {
+    using UnityEngine;
     using UnityEditor;
 
     [CanEditMultipleObjects]
@@ -11,6 +12,7 @@ namespace Project.Data.PlayableArea
         private ColorBlockAsset _reference;
 
         private SerializedProperty _name;
+        private SerializedProperty _gravity;
         private SerializedProperty _defaultColorSprite;
         private SerializedProperty _colorSpriteForGroup;
 
@@ -26,6 +28,7 @@ namespace Project.Data.PlayableArea
                 return;
 
             _name = serializedObject.FindProperty("_name");
+            _gravity = serializedObject.FindProperty("_gravity");
             _defaultColorSprite = serializedObject.FindProperty("_defaultColorSprite");
             _colorSpriteForGroup = serializedObject.FindProperty("_colorSpriteForGroup");
 
@@ -41,7 +44,13 @@ namespace Project.Data.PlayableArea
             EditorGUILayout.PropertyField(_name);
             CoreEditorModule.DrawHorizontalLine();
 
-            EditorGUILayout.PropertyField(_defaultColorSprite);
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+            {
+                EditorGUILayout.PropertyField(_defaultColorSprite);
+                EditorGUILayout.PropertyField(_gravity);
+            }
+            EditorGUILayout.EndVertical();
+
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(_colorSpriteForGroup);
             if(EditorGUI.EndChangeCheck())

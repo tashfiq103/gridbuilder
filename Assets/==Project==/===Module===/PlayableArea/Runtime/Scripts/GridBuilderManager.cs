@@ -148,6 +148,7 @@ namespace Project.Module.PlayableArea
                 i,
                 j,
                 index,
+                _gridDataAssetForCurrentLevel.ColorBlocks[gridColorIndex].Gravity,
                 _gridDataAssetForCurrentLevel.ColorBlocks[gridColorIndex].DefaulColorSprite,
                 new Vector3(x, y, 0));
             colorBlock.SetColorIndex(gridColorIndex);
@@ -198,6 +199,7 @@ namespace Project.Module.PlayableArea
                                 i,
                                 j,
                                 index,
+                                colorBlockAsset.Gravity,
                                 colorBlockAsset.DefaulColorSprite,
                                 new Vector3(x, y, 0));
                             colorBlock.SetColorIndex(_gridDataAssetForCurrentLevel.GetColorBlockIndex(colorBlockAsset));
@@ -220,8 +222,9 @@ namespace Project.Module.PlayableArea
                                 i,
                                 j,
                                 index,
+                                objectiveBlockAsset.Gravity,
                                 objectiveBlockAsset.DefaulColorSprite,
-                                new Vector3(x, y, 0));
+                                new Vector3(x, y, 0)) ;
                             _listOfObjectiveBlock.Add(objectiveBlock);
                             _listOfBlock.Add(objectiveBlock);
 #if UNITY_EDITOR

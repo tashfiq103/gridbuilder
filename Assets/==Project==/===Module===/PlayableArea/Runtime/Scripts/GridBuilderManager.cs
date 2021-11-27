@@ -457,151 +457,58 @@ namespace Project.Module.PlayableArea
 
         private void RefillTheGrid()
         {
-            //[O] //Color
-            //[=] //Objective - Blocker
-            //[O] //Color
-            //[X] //Empty
-            //[X] //Empty (Found)
-            //[O] //Color
-            
             int row = _gridDataAssetForCurrentLevel.Row;
             int column = _gridDataAssetForCurrentLevel.Column;
-            Debug.Log(string.Format("Row = {0}, Column = {1}", row, column));
-            List<int> listOfColumnShuffeled = new List<int>();
+
+            List<int> listOfShuffeledColumn = new List<int>();
+
+            float posY = (-(row / 2.0f) + 0.5f);
             for (int i = 0; i < row; i++)
             {
+
+                float posX = (-(column / 2.0f) + 0.5f);
                 for (int j = 0; j < column; j++)
                 {
-                    int index = (i * column) + j;
-                    Debug.Log(string.Format("Grid({0},{1})", i, j));
+                    int index   = (i * column) + j;
+
                     if (_listOfBlock[index] == null)
                     {
-                        Debug.Log(string.Format("EmptyBlock: Index = {0}", index));
-                        if (!listOfColumnShuffeled.Contains(j))
+                        //if : Empty
+                        for (int k = i + 1; k < row; k++)
                         {
-                            Debug.Log(string.Format("Column = {0}, Not Shuffled. Index = {1}", j, index));
-                            List<int> listOfRowIndexToBeSort = new List<int>();
-                            //if : Found Column Need Shuffle
-                            for (int k = i; k < row; k++)
+                            int indexInNextRow = (k * column) + j;
+                            if (_listOfBlock[indexInNextRow] != null)
                             {
-                                int nextRow = (k * column) + j;
-                                listOfRowIndexToBeSort.Add(nextRow);
-                            }
-                            //[0,1,2,3,4]
-                            //[X,X,O,=,O]
-                            // x = 0 : IsEmpty? : Yes
-                            // y = x + 1 (Val = 1): IsEmpty? No
-                            // x = 1 (Val = 1): IsEmpty? : Yes
-                            // y = x + 1 (Val = 2): IsEmpty? : No
-                            // y = InteractableBlock? Yes
-                            // y = IsImpactByGravity? Yes
-                            // Traverse(y = 2) to Bottom(0 : if possible) as possibe
-                            //[0,X,X,=,0]
-                            // x = 2 (Val = 2) : IsEmpty? Yes
-                            // y = x + 1 (Val = 3) : IsEmpty? : No
-                            // y = InteractableBlock?
-                            // y = IsImpactByGravity? : No
-                            // No 'Traverse'
-                            //[0,X,X,=,0]
-                            // x = 3 : IsEmpty? No
-                            // end
-                            List<int> listOfSortedRowIndex = new List<int>(listOfRowIndexToBeSort);
-                            foreach (int value in listOfSortedRowIndex)
-                                Debug.Log(string.Format("SortedRowIndex = {0}", value));
-
-                            int sizeOfSortedIndex = listOfSortedRowIndex.Count;
-                            for (int x = 0; x < sizeOfSortedIndex - 1; x++)
-                            {
-                                int indexOnRow = listOfSortedRowIndex[x];
-                                if (_listOfBlock[indexOnRow] == null)
+                                InteractableBlock interactableBlock = null;
+                                if (_listOfBlock[indexInNextRow].TryGetComponent<InteractableBlock>(out interactableBlock))
                                 {
-                                    Debug.Log(string.Format("EmptyGridFound = {0}", indexOnRow));
-                                    //if : Empty Space
-                                    for (int y = x + 1; y < sizeOfSortedIndex; y++)
+                                    if (interactableBlock.IsImpactByGravity)
                                     {
-                                        int nextIndexOnRow = listOfSortedRowIndex[y];
-                                        if (_listOfBlock[nextIndexOnRow] != null)
-                                        {
-                                            Debug.Log(string.Format("Name = {0}, NonEmptyGridFound = {1}", _listOfBlock[nextIndexOnRow].name, nextIndexOnRow));
-                                            //if : Next Row is not empty/null
-                                            InteractableBlock interactableBlock;
-                                            if (_listOfBlock[nextIndexOnRow].TryGetComponent<InteractableBlock>(out interactableBlock))
-                                            {
-                                                Debug.Log(string.Format("Name = {0}, IsImpactByGravity = {1}", interactableBlock.name, interactableBlock.IsImpactByGravity));
-                                                //if : InteractableBlock
-                                                if (interactableBlock.IsImpactByGravity)
-                                                {
-                                                    //if : ImpactByGravity
-                                                    int currentRowIndex     = y;
-                                                    int previousRowIndex    = y - 1;
-                                                    Debug.Log(string.Format("SortStartingPoint = {0}", listOfSortedRowIndex[currentRowIndex]));
-                                                    while (previousRowIndex >= 0)
-                                                    {
-                                                        //While : reverseIndex >= 0
-                                                        if (_listOfBlock[listOfSortedRowIndex[previousRowIndex]] == null)
-                                                        {
-                                                            //if : Previous block is empty
+                                        _listOfBlock[index]         = _listOfBlock[indexInNextRow];
+                                        _listOfBlock[indexInNextRow]= null;
 
-                                                            InteractableBlock swappedInteractableBlock = _listOfBlock[listOfSortedRowIndex[currentRowIndex]];
-                                                            _listOfBlock[listOfSortedRowIndex[currentRowIndex]] = _listOfBlock[listOfSortedRowIndex[previousRowIndex]];
-                                                            _listOfBlock[listOfSortedRowIndex[previousRowIndex]] = swappedInteractableBlock;
-
-                                                            swappedInteractableBlock.UpdateGridInfo(
-                                                                    listOfSortedRowIndex[previousRowIndex],
-                                                                    j,
-                                                                    index
-                                                                );
-                                                            swappedInteractableBlock.Move(
-                                                                    new Vector3(
-                                                                            (-(column / 2.0f) + 0.5f) + j,
-                                                                            (-(row / 2.0f) + 0.5f) + listOfSortedRowIndex[previousRowIndex],
-                                                                            0
-                                                                        ),
-                                                                    0.5f
-                                                                );
-
-                                                            //Debug.Log(string.Format("Before Swap : CurrentRow({0}) -> PreviousRow({1})", listOfSortedRowIndex[currentRowIndex], listOfSortedRowIndex[previousRowIndex]));
-
-                                                            //int temp = listOfSortedRowIndex[currentRowIndex];
-                                                            //listOfSortedRowIndex[currentRowIndex] = listOfSortedRowIndex[previousRowIndex];
-                                                            //listOfSortedRowIndex[previousRowIndex] = temp;
-
-                                                            //Debug.Log(string.Format("After Swap : CurrentRow({0}) -> PreviousRow({1})", listOfSortedRowIndex[currentRowIndex], listOfSortedRowIndex[previousRowIndex]));
-
-                                                            
-
-                                                            
-
-                                                            currentRowIndex--;
-                                                            previousRowIndex--;
-                                                        }
-                                                        else {
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
+                                        _listOfBlock[index].UpdateGridInfo(
+                                                k,
+                                                j,
+                                                index
+                                            );
+                                        _listOfBlock[index].Move(
+                                                new Vector3(
+                                                        posX,
+                                                        posY,
+                                                        0
+                                                    ),
+                                                0.5f
+                                            );
                                     }
                                 }
+                                break;
                             }
-
-                            for (int m = sizeOfSortedIndex - 1; m >= 0; m--)
-                            {
-                                int finalIndex = listOfSortedRowIndex[m];
-                                if (_listOfBlock[finalIndex] != null)
-                                {
-                                    break;
-                                }else
-                                {
-                                    _listOfBlock[finalIndex] = FillTheGridWithColorBlock(listOfSortedRowIndex[m], j, finalIndex);
-                                }
-                            }
-
-                            listOfColumnShuffeled.Add(j);
                         }
                     }
+                    posX++;
                 }
+                posY++;
             }
         }
 
@@ -661,16 +568,11 @@ namespace Project.Module.PlayableArea
 
         private void OnRecievingTheTouchedColorGrid(InteractableBlock touchedGrid)
         {
-            Debug.Log(string.Format(
-                "Touced Grid({0},{1}) : Index = {2}",
-                touchedGrid.RowIndex,
-                touchedGrid.ColumnIndex,
-                touchedGrid.Index));
 
             ColorBlock colorBlock;
             if (touchedGrid.TryGetComponent<ColorBlock>(out colorBlock))
             {
-                Debug.Log(string.Format("ColorBlock = {0}", colorBlock.name));
+                Debug.Log(string.Format("Touched : ColorBlock = {0}", colorBlock.name));
                 int solutionIndex = -1;
                 if (_gridMapingForPossibleSolution.TryGetValue(colorBlock, out solutionIndex))
                 {
@@ -678,8 +580,8 @@ namespace Project.Module.PlayableArea
                     OnTouchedSolution(_listOfSolution[solutionIndex]);
                     RefillTheGrid();
 
-                    while (CheckIfDeadlockCondition()) {
-
+                    while (CheckIfDeadlockCondition())
+                    {
                         ShuffleTheWholeGrid();
                     }
 

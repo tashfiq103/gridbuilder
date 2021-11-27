@@ -33,6 +33,20 @@ namespace Project.UI
 
         protected override void OnCanvasEnabled()
         {
+            
+        }
+
+        protected override void OnCavasDisabled()
+        {
+            
+        }
+
+        protected override void OnLevelCompleted()
+        {
+            base.OnLevelCompleted();
+
+            SetCanvasVisibility(true);
+
             DOVirtual.Float(0f, 1, 0.5f, (value) =>
             {
                 _background.color = new Color(1, 1, 1, value);
@@ -47,18 +61,6 @@ namespace Project.UI
                         _nextButton.transform.DOScale(1, 0.5f);
                     }
                 );
-        }
-
-        protected override void OnCavasDisabled()
-        {
-            
-        }
-
-        protected override void OnLevelCompleted()
-        {
-            base.OnLevelCompleted();
-
-            SetCanvasVisibility(true);
         }
 
         #endregion

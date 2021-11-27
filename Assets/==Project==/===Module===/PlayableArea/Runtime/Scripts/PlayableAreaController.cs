@@ -4,6 +4,7 @@ namespace Project.Module.PlayableArea
     using UnityEngine;
     using Project.Shared;
     using Project.Data.PlayableArea;
+    using DG.Tweening;
 
     public class PlayableAreaController : GameBehaviour
     {
@@ -582,11 +583,25 @@ namespace Project.Module.PlayableArea
 
                     if (_listOfObjectiveBlock.Count <= 0)
                     {
-                        _gameManager.OnLevelCompleteEvent.Raise();
+                        DOVirtual.DelayedCall(
+                                1,
+                                () =>
+                                {
+                                    _gameManager.OnLevelCompleteEvent.Raise();
+                                }
+                            );
+                        
                     }
                     else if (RemainingNumberOfMove <= 0)
                     {
-                        _gameManager.OnLevelFailedEvent.Raise();
+                        DOVirtual.DelayedCall(
+                                1,
+                                () =>
+                                {
+                                    _gameManager.OnLevelFailedEvent.Raise();
+                                }
+                            );
+                        
                     }
                     else {
 
@@ -597,9 +612,11 @@ namespace Project.Module.PlayableArea
                         }
 
                         CreateListOfPossibleSolution();
+
+                        _userInputOnColorGrid.SetInputStatus(true);
                     }
 
-                    _userInputOnColorGrid.SetInputStatus(true);
+                    
                 }
                 else {
                     Debug.LogError(string.Format("SolutionIndex = {0}", solutionIndex));

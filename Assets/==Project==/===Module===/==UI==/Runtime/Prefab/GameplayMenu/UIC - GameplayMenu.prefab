@@ -322,10 +322,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2089427539347220576, guid: cb42395e4255442b4ac858e5c3374b80, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
-      objectReference: {fileID: 0}
     - target: {fileID: 5209483078246221499, guid: cb42395e4255442b4ac858e5c3374b80, type: 3}
       propertyPath: m_Name
       value: UIC - HUD

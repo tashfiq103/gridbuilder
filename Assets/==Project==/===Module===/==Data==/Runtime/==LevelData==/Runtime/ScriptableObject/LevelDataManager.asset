@@ -14,3 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _levelInformation:
   - _levelDataAsset: {fileID: 11400000, guid: d42dd935674d340ee8ca52879ab0b4dc, type: 2}
+  - _levelDataAsset: {fileID: 11400000, guid: d42dd935674d340ee8ca52879ab0b4dc, type: 2}
+  - _levelDataAsset: {fileID: 11400000, guid: d42dd935674d340ee8ca52879ab0b4dc, type: 2}
+  - _levelDataAsset: {fileID: 11400000, guid: d42dd935674d340ee8ca52879ab0b4dc, type: 2}
+  - _levelDataAsset: {fileID: 11400000, guid: d42dd935674d340ee8ca52879ab0b4dc, type: 2}

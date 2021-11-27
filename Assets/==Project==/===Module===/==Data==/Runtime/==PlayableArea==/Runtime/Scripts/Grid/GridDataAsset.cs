@@ -105,8 +105,6 @@ namespace Project.Data.PlayableArea
                 }
             }
 
-            Debug.Log(counter);
-
             return counter;
         }
 

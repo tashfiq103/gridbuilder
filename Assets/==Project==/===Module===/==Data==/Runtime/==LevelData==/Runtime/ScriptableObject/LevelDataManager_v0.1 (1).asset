@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a7eed39d58af4411a2bdb4dd44642db, type: 3}
-  m_Name: LevelDataManager
+  m_Name: LevelDataManager_v0.1 (1)
   m_EditorClassIdentifier: 
   _levelInformation:
+  - _levelDataAsset: {fileID: 11400000, guid: d42dd935674d340ee8ca52879ab0b4dc, type: 2}
   - _levelDataAsset: {fileID: 11400000, guid: d42dd935674d340ee8ca52879ab0b4dc, type: 2}
   - _levelDataAsset: {fileID: 11400000, guid: d42dd935674d340ee8ca52879ab0b4dc, type: 2}
   - _levelDataAsset: {fileID: 11400000, guid: d42dd935674d340ee8ca52879ab0b4dc, type: 2}

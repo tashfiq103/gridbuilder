@@ -48,6 +48,7 @@ namespace Project.UI
         [Space(5.0f)]
         [SerializeField] private TextMeshProUGUI _remainingNumberOfMoveText;
         [SerializeField] private TextMeshProUGUI _remainingNumberOfObjectiveText;
+        [SerializeField] private TextMeshProUGUI _levelNumberText;
         [SerializeField] private Image          _objectiveIcon;
         [SerializeField] private float          _delayOnSwapingObjective;
 
@@ -95,7 +96,6 @@ namespace Project.UI
             {
                 if (_isResetTime || remainingTimeToSwap <= 0)
                 {
-                    Debug.Log("AIse");
                     _objectiveIcon.sprite = _listOfObjectiveBlockInfo[_indexOfCurrentInfo].ObjectiveBlockAssetReference.DefaulColorSprite;
                     _remainingNumberOfObjectiveText.text = _listOfObjectiveBlockInfo[_indexOfCurrentInfo].RemainingNumberOfObjective.ToString();
 
@@ -119,8 +119,12 @@ namespace Project.UI
 
         protected override void OnCanvasEnabled()
         {
-            int levelIndex          = _gameManager.LevelDataManagerReference.GetLevelIndex;
-            _currentGridDataAsset   = _gameManager.GridDataManagerReference.GridsData[levelIndex];
+            int incrementalLevelIndex    = _gameManager.LevelDataManagerReference.GetIncrementalLevelIndex;
+            _levelNumberText.text       = string.Format("LEVEL\n{0}{1}", incrementalLevelIndex <= 9 ? "0" : "", incrementalLevelIndex); 
+
+            int levelIndex              = _gameManager.LevelDataManagerReference.GetLevelIndex;
+            
+            _currentGridDataAsset       = _gameManager.GridDataManagerReference.GridsData[levelIndex];
 
             OnUpdatingUIRemainingNumberOfMove(_currentGridDataAsset.NumberOfAvailableMove);
             _gameManager.GridDataManagerReference.OnPassingRemainingNumberOfMove += OnUpdatingUIRemainingNumberOfMove;
@@ -140,7 +144,7 @@ namespace Project.UI
             }
             _gameManager.GridDataManagerReference.OnRemainingNumberOfObjective += OnUpdatingRemainingNumberOfObjective;
 
-            
+            _levelNumberText.rectTransform.DOScale(1, 0.5f);
             _moveInfoRectTransform.DOScale(1, 0.5f);
             _objectiveRectTransform.DOScale(1, 0.5f);
 

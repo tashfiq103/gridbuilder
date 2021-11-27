@@ -19,7 +19,7 @@ MonoBehaviour:
   _showGridNumber: 1
   _row: 9
   _column: 7
-  _numberOfAvailableMove: 3
+  _numberOfAvailableMove: 18
   _objectiveBlocks:
   - {fileID: 11400000, guid: 499b218d938864bfcafb7b852cf2823d, type: 2}
   - {fileID: 11400000, guid: 0925afa1b9206434a8c52d7c7ae44d28, type: 2}

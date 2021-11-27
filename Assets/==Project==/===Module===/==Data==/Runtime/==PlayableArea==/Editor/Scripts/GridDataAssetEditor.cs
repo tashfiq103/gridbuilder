@@ -271,7 +271,12 @@ namespace Project.Data.PlayableArea
                                 }
                             }
 
-                            if (GUILayout.Button("Reset Grid", GUILayout.Width(100)))
+                            if (GUILayout.Button("Fill Empty (Color)", GUILayout.Width(120)))
+                            {
+                                FillEmptyWithColor();
+                            }
+
+                            if (GUILayout.Button("Reset Grid", GUILayout.Width(80)))
                             {
                                 ResetGrid();
                             }
@@ -306,6 +311,22 @@ namespace Project.Data.PlayableArea
             {
                 _gridLayout.GetArrayElementAtIndex(i).objectReferenceValue = null;
                 _gridLayout.GetArrayElementAtIndex(i).serializedObject.ApplyModifiedProperties();
+            }
+
+            _gridLayout.serializedObject.ApplyModifiedProperties();
+        }
+
+        private void FillEmptyWithColor()
+        {
+            int numberOfColorBlock = _colorBlocks.arraySize;
+            int sizeOfGrid = _gridLayout.arraySize;
+            for (int i = 0; i < sizeOfGrid; i++)
+            {
+                if (_gridLayout.GetArrayElementAtIndex(i).objectReferenceValue == null)
+                {
+                    _gridLayout.GetArrayElementAtIndex(i).objectReferenceValue = _reference.ColorBlocks[Random.Range(0, numberOfColorBlock)];
+                    _gridLayout.GetArrayElementAtIndex(i).serializedObject.ApplyModifiedProperties();
+                }
             }
 
             _gridLayout.serializedObject.ApplyModifiedProperties();

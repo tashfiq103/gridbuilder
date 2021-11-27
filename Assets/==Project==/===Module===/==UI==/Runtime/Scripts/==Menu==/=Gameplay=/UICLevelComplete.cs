@@ -13,6 +13,9 @@ namespace Project.UI
         [SerializeField] private RectTransform _levelCompleteText;
         [SerializeField] private Button _nextButton;
 
+        [Space(5.0f)]
+        [SerializeField] private ParticleSystem _celebretionParticle;
+
         private Tween _tweenForLevelCompleteText;
 
         #endregion
@@ -57,6 +60,7 @@ namespace Project.UI
                     0.5f,
                     () =>
                     {
+                        _celebretionParticle.Play();
                         _tweenForLevelCompleteText = _levelCompleteText.DOScale(1.125f, 0.25f).SetLoops(-1, LoopType.Yoyo);
                         _nextButton.transform.DOScale(1, 0.5f);
                     }

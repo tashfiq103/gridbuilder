@@ -395,7 +395,7 @@ MonoBehaviour:
   _userInputOnColorGrid: {fileID: 2040433141}
   _colorBlockPrefab: {fileID: 6888201137301174348, guid: 6ab877aa6e7d64ddc886b5b653ab6cdc, type: 3}
   _objectiveBlockPrefab: {fileID: 6888201137301174348, guid: 74e7216993ef84ade804dcac28052fc5, type: 3}
-  _listOfObjectiveBlock: []
+  _listOfBlock: []
 --- !u!1 &1687258581
 GameObject:
   m_ObjectHideFlags: 0
@@ -788,10 +788,6 @@ PrefabInstance:
     - target: {fileID: 1786380893071605417, guid: af42dd3f9a82d48bb96bd0bd8122f7d7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4568651654188898759, guid: af42dd3f9a82d48bb96bd0bd8122f7d7, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af42dd3f9a82d48bb96bd0bd8122f7d7, type: 3}

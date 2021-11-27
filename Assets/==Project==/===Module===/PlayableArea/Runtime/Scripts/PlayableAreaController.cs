@@ -62,7 +62,7 @@ namespace Project.Module.PlayableArea
 
 
         private GridDataAsset                           _gridDataAssetForCurrentLevel;
-        private List<InteractableBlock>                 _listOfBlock;
+        [SerializeField]private List<InteractableBlock>                 _listOfBlock;
 
         //ColorBlock
         private List<ColorBlock>                        _listOfColorBlock;
@@ -71,7 +71,7 @@ namespace Project.Module.PlayableArea
         
 
         //ObjectiveBlock
-        [SerializeField] private List<ObjectiveBlock>   _listOfObjectiveBlock;
+        private List<ObjectiveBlock>   _listOfObjectiveBlock;
 
         #endregion
 
@@ -470,12 +470,37 @@ namespace Project.Module.PlayableArea
         }
 
 
-        private void RefillTheGrid()
+        private void RefillTheGrid(int row, int column)
         {
-            int row = _gridDataAssetForCurrentLevel.Row;
-            int column = _gridDataAssetForCurrentLevel.Column;
+            for (int j = 0; j < column; j++)
+            {
+                List<Vector3Int> listOfGridCordinateToBeFilled = new List<Vector3Int>();
+                for (int i = 0; i < row; i++)
+                {
+                    int index = (i * column) + j;
 
-            List<int> listOfShuffeledColumn = new List<int>();
+                    if (_listOfBlock[index] == null)
+                    {
+                        listOfGridCordinateToBeFilled.Add(new Vector3Int(i, j, index));
+                    }
+                    else {
+                        listOfGridCordinateToBeFilled.Clear();
+                    }
+                }
+
+                foreach (Vector3Int gridCordinate in listOfGridCordinateToBeFilled)
+                {
+                    _listOfBlock[gridCordinate.z] = FillTheGridWithColorBlock(
+                            gridCordinate.x,
+                            gridCordinate.y,
+                            gridCordinate.z
+                        );
+                }
+            }
+        }
+
+        private void RearrageTheGrid(int row, int column)
+        {
 
             float posY = (-(row / 2.0f) + 0.5f);
             for (int i = 0; i < row; i++)
@@ -637,7 +662,11 @@ namespace Project.Module.PlayableArea
                     }
                     else {
 
-                        RefillTheGrid();
+                        int row = _gridDataAssetForCurrentLevel.Row;
+                        int column = _gridDataAssetForCurrentLevel.Column;
+
+                        RearrageTheGrid(row, column);
+                        RefillTheGrid(row, column);
                         while (CheckIfDeadlockCondition())
                         {
                             ShuffleTheWholeGrid();

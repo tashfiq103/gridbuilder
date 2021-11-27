@@ -39,9 +39,9 @@ namespace Project.Module.PlayableArea
             Appear();
             if (transform.localPosition != localPosition)
             {
-                transform.DOLocalMove(localPosition, 0.5f);
+                Move(localPosition, 0.5f);
             }
-            
+
         }
 
         public void UpdateGridInfo(int row, int column, int index)
@@ -77,6 +77,10 @@ namespace Project.Module.PlayableArea
                 );
         }
 
+        public void Move(Vector3 localPosition, float duration)
+        {
+            transform.DOLocalMove(localPosition, duration);
+        }
 
         #endregion
     }

@@ -288,14 +288,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1585799922}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2040433140}
   m_Father: {fileID: 131402846}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &1585799924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -311,6 +311,7 @@ MonoBehaviour:
   _userInputOnColorGrid: {fileID: 2040433141}
   _colorBlockPrefab: {fileID: 6888201137301174348, guid: 6ab877aa6e7d64ddc886b5b653ab6cdc, type: 3}
   _objectiveBlockPrefab: {fileID: 6888201137301174348, guid: 74e7216993ef84ade804dcac28052fc5, type: 3}
+  _listOfBlock: []
 --- !u!1 &1687258581
 GameObject:
   m_ObjectHideFlags: 0

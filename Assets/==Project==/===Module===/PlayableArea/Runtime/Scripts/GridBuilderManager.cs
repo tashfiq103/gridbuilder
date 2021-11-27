@@ -21,7 +21,7 @@ namespace Project.Module.PlayableArea
             int levelIndex = _gameManager.LevelDataManagerReference.GetLevelIndex;
             _gridDataAssetForCurrentLevel = _gameManager.GridDataManagerReference.GridsData[levelIndex];
 
-            FillTheWholeGrid();
+            FillTheWholeGridFromLayout();
 
             _userInputOnColorGrid.Initialize(OnRecievingTheTouchedColorGrid);
         }
@@ -51,13 +51,13 @@ namespace Project.Module.PlayableArea
         [SerializeField] private List<InteractableBlock> _listOfBlock;
 
         //ColorBlock
-        private List<ColorBlock>            _listOfColorBlock;
+        [SerializeField] private List<ColorBlock>            _listOfColorBlock;
 
         private Dictionary<ColorBlock, int> _gridMapingForPossibleSolution;
         private List<List<ColorBlock>>      _listOfSolution;
 
         //ObjectiveBlock
-        private List<ObjectiveBlock> _listOfObjectiveBlock;
+        [SerializeField] private List<ObjectiveBlock> _listOfObjectiveBlock;
 
         #endregion
 
@@ -81,7 +81,8 @@ namespace Project.Module.PlayableArea
 
                     //Debug.Log(string.Format("Block({0})", index));
 
-                    if (_listOfBlock[index].TryGetComponent<ColorBlock>(out colorBlock))
+                    if (_listOfBlock[index] != null
+                     && _listOfBlock[index].TryGetComponent<ColorBlock>(out colorBlock))
                     {
                         //Debug.Log(string.Format("ColorBlock({0})", index));
 
@@ -91,7 +92,8 @@ namespace Project.Module.PlayableArea
                             int upperRowIndex = ((i + 1) * column) + j;
                             ColorBlock colorBlockOnUpperRow;
 
-                            if (_listOfBlock[upperRowIndex].TryGetComponent<ColorBlock>(out colorBlockOnUpperRow))
+                            if (_listOfBlock[upperRowIndex] != null
+                             && _listOfBlock[upperRowIndex].TryGetComponent<ColorBlock>(out colorBlockOnUpperRow))
                             {
                                 //Debug.Log(string.Format("Index = {0}, UpperRowIndex = {1}", index, upperRowIndex));
                                 if (colorBlock.ColorIndex == colorBlockOnUpperRow.ColorIndex)
@@ -108,7 +110,8 @@ namespace Project.Module.PlayableArea
                             int nextColumnIndex = (i * column) + (j + 1);
                             ColorBlock colorBlockOnNextColumn;
 
-                            if (_listOfBlock[nextColumnIndex].TryGetComponent<ColorBlock>(out colorBlockOnNextColumn))
+                            if (_listOfBlock[nextColumnIndex] != null
+                             && _listOfBlock[nextColumnIndex].TryGetComponent<ColorBlock>(out colorBlockOnNextColumn))
                             {
                                 //Debug.Log(string.Format("Index = {0}, NextColumnIndex = {1}", index, nextColumnIndex));
                                 if (colorBlock.ColorIndex == colorBlockOnNextColumn.ColorIndex)
@@ -164,14 +167,17 @@ namespace Project.Module.PlayableArea
             return colorBlock;
         }
 
-        private void FillTheWholeGrid()
+        private void FillTheWholeGridFromLayout()
         {
             do
             {
                 if (_listOfBlock != null)
                 {
                     foreach (InteractableBlock interactableBlock in _listOfBlock)
-                        Destroy(interactableBlock.gameObject);
+                    {
+                        if (interactableBlock != null)
+                            Destroy(interactableBlock.gameObject);
+                    }
                 }
 
                 _listOfBlock = new List<InteractableBlock>();
@@ -185,7 +191,7 @@ namespace Project.Module.PlayableArea
                 for (int i = 0; i < row; i++)
                 {
                     float x = -(column / 2.0f) + 0.5f;
-                    for (int j = 0; j < _gridDataAssetForCurrentLevel.Column; j++)
+                    for (int j = 0; j < column; j++)
                     {
                         
                         int index = (i * column) + j;
@@ -248,6 +254,57 @@ namespace Project.Module.PlayableArea
             CreateListOfPossibleSolution();
         }
 
+        private void ShuffleTheWholeGrid() {
+
+            _listOfColorBlock = new List<ColorBlock>();
+
+            int row = _gridDataAssetForCurrentLevel.Row;
+            int column = _gridDataAssetForCurrentLevel.Column;
+
+            float y = -(row / 2.0f) + 0.5f;
+            for (int i = 0; i < row; i++)
+            {
+                float x = -(column / 2.0f) + 0.5f;
+                for (int j = 0; j < column; j++)
+                {
+                    int index = (i * column) + j;
+
+                    ColorBlock colorBlock = null;
+                    if (_listOfBlock[index] == null || (_listOfBlock[index] != null && _listOfBlock[index].TryGetComponent<ColorBlock>(out colorBlock)))
+                    {
+                        if (colorBlock != null)
+                            Destroy(colorBlock.gameObject);
+
+                        //if : Empty || ColorBlock
+                        ColorBlockAsset colorBlockAsset = _gridDataAssetForCurrentLevel.ColorBlocks[Random.Range(0, _gridDataAssetForCurrentLevel.NumberOfColorBlock)];
+                        colorBlock = Instantiate(_colorBlockPrefab, transform).GetComponent<ColorBlock>();
+                        colorBlock.transform.localPosition = new Vector3(x, y, 0);
+                        colorBlock.Initialize(
+                            i,
+                            j,
+                            index,
+                            colorBlockAsset.Gravity,
+                            colorBlockAsset.DefaulColorSprite,
+                            new Vector3(x, y, 0));
+                        colorBlock.SetColorIndex(_gridDataAssetForCurrentLevel.GetColorBlockIndex(colorBlockAsset));
+                        _listOfColorBlock.Add(colorBlock);
+                        _listOfBlock[index] = colorBlock;
+
+#if UNITY_EDITOR
+                        colorBlock.gameObject.name = string.Format(
+                            "ColorBlock[{0},{1}]_Index({2}))",
+                            i,
+                            j,
+                            index);
+#endif
+                    }
+                    x++;
+                }
+                y++;
+            }
+            
+        }
+
         private void CreateListOfPossibleSolution()
         {
             _gridMapingForPossibleSolution  = new Dictionary<ColorBlock, int>();
@@ -298,7 +355,10 @@ namespace Project.Module.PlayableArea
 
             ColorBlock currentColorBlock;
             ColorBlock nextColorBlock;
-            if (_listOfBlock[currentIndex].TryGetComponent<ColorBlock>(out currentColorBlock) && _listOfBlock[nextIndex].TryGetComponent<ColorBlock>(out nextColorBlock))
+            if (_listOfBlock[currentIndex] != null
+             && _listOfBlock[nextIndex] != null
+             && _listOfBlock[currentIndex].TryGetComponent<ColorBlock>(out currentColorBlock)
+             && _listOfBlock[nextIndex].TryGetComponent<ColorBlock>(out nextColorBlock))
             {
                 if (currentColorBlock.ColorIndex == nextColorBlock.ColorIndex)
                 {
@@ -482,11 +542,35 @@ namespace Project.Module.PlayableArea
                                                         {
                                                             //if : Previous block is empty
 
-                                                            int temp = listOfSortedRowIndex[currentRowIndex];
-                                                            listOfSortedRowIndex[currentRowIndex] = listOfSortedRowIndex[previousRowIndex];
-                                                            listOfSortedRowIndex[currentRowIndex] = temp;
+                                                            InteractableBlock swappedInteractableBlock = _listOfBlock[listOfSortedRowIndex[currentRowIndex]];
+                                                            _listOfBlock[listOfSortedRowIndex[currentRowIndex]] = _listOfBlock[listOfSortedRowIndex[previousRowIndex]];
+                                                            _listOfBlock[listOfSortedRowIndex[previousRowIndex]] = swappedInteractableBlock;
 
-                                                            Debug.Log(string.Format("{0} <= Swap => {1}", listOfSortedRowIndex[previousRowIndex], listOfSortedRowIndex[currentRowIndex]));
+                                                            swappedInteractableBlock.UpdateGridInfo(
+                                                                    listOfSortedRowIndex[previousRowIndex],
+                                                                    j,
+                                                                    index
+                                                                );
+                                                            swappedInteractableBlock.Move(
+                                                                    new Vector3(
+                                                                            (-(column / 2.0f) + 0.5f) + j,
+                                                                            (-(row / 2.0f) + 0.5f) + listOfSortedRowIndex[previousRowIndex],
+                                                                            0
+                                                                        ),
+                                                                    0.5f
+                                                                );
+
+                                                            //Debug.Log(string.Format("Before Swap : CurrentRow({0}) -> PreviousRow({1})", listOfSortedRowIndex[currentRowIndex], listOfSortedRowIndex[previousRowIndex]));
+
+                                                            //int temp = listOfSortedRowIndex[currentRowIndex];
+                                                            //listOfSortedRowIndex[currentRowIndex] = listOfSortedRowIndex[previousRowIndex];
+                                                            //listOfSortedRowIndex[previousRowIndex] = temp;
+
+                                                            //Debug.Log(string.Format("After Swap : CurrentRow({0}) -> PreviousRow({1})", listOfSortedRowIndex[currentRowIndex], listOfSortedRowIndex[previousRowIndex]));
+
+                                                            
+
+                                                            
 
                                                             currentRowIndex--;
                                                             previousRowIndex--;
@@ -575,8 +659,6 @@ namespace Project.Module.PlayableArea
 
         }
 
-        
-
         private void OnRecievingTheTouchedColorGrid(InteractableBlock touchedGrid)
         {
             Debug.Log(string.Format(
@@ -595,6 +677,14 @@ namespace Project.Module.PlayableArea
                     _userInputOnColorGrid.SetInputStatus(false);
                     OnTouchedSolution(_listOfSolution[solutionIndex]);
                     RefillTheGrid();
+
+                    while (CheckIfDeadlockCondition()) {
+
+                        ShuffleTheWholeGrid();
+                    }
+
+                    CreateListOfPossibleSolution();
+
                     _userInputOnColorGrid.SetInputStatus(true);
                 }
                 else {

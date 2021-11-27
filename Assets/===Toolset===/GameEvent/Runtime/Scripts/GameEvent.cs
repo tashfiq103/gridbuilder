@@ -3,6 +3,7 @@ namespace Toolset.GameEvent
     using System;
     using System.Collections.Generic;
     using UnityEngine;
+    using com.faith.coreconsole;
 
 #if UNITY_EDITOR
     using UnityEditor;
@@ -85,6 +86,8 @@ namespace Toolset.GameEvent
         }
 
         public void Raise() {
+
+            CoreConsole.Log(string.Format("EventRaised : {0}", name), Color.magenta, "GameEvent");
 
             int numberOfEvent = _listOfGameEventResponse.Count;
             for (int i = numberOfEvent - 1; i >= 0; i--)

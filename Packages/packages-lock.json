@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "0c33c489037477b8431668bad32615913ced53da"
     },
+    "com.faith.coreconsole": {
+      "version": "https://github.com/tashfiq103/com.faith.coreconsole.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "dcf80df1aa8eca6c4668359afa530d5566c5e9de"
+    },
     "com.faith.gameplay": {
       "version": "https://github.com/tashfiq103/com.faith.gameplay.git",
       "depth": 0,

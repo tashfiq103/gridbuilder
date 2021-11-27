@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.faith.core": "https://github.com/tashfiq103/com.faith.core.git",
+    "com.faith.coreconsole": "https://github.com/tashfiq103/com.faith.coreconsole.git",
     "com.faith.gameplay": "https://github.com/tashfiq103/com.faith.gameplay.git",
     "com.faith.gameplay.service": "https://github.com/tashfiq103/com.faith.gameplay.service.git",
     "com.unity.2d.sprite": "1.0.0",

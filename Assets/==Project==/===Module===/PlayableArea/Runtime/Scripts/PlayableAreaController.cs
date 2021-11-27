@@ -563,14 +563,25 @@ namespace Project.Module.PlayableArea
 
                     _userInputOnColorGrid.SetInputStatus(false);
                     OnTouchedSolution(_listOfPossibleSolutionForColorBlock[solutionIndex]);
-                    RefillTheGrid();
 
-                    while (CheckIfDeadlockCondition())
+                    if (_listOfObjectiveBlock.Count <= 0)
                     {
-                        ShuffleTheWholeGrid();
+                        _gameManager.OnLevelCompleteEvent.Raise();
                     }
+                    else if (RemainingNumberOfMove <= 0)
+                    {
+                        _gameManager.OnLevelFailedEvent.Raise();
+                    }
+                    else {
 
-                    CreateListOfPossibleSolution();
+                        RefillTheGrid();
+                        while (CheckIfDeadlockCondition())
+                        {
+                            ShuffleTheWholeGrid();
+                        }
+
+                        CreateListOfPossibleSolution();
+                    }
 
                     _userInputOnColorGrid.SetInputStatus(true);
                 }

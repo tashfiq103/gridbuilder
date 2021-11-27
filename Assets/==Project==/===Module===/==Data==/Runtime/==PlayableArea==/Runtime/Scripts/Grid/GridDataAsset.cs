@@ -61,6 +61,19 @@ namespace Project.Data.PlayableArea
             return -1;
         }
 
+        public int GetNumberOfColorBlock(ColorBlockAsset colorBlockAsset)
+        {
+            int counter = 0;
+
+            for (int i = 0; i < NumberOfColorBlock; i++)
+            {
+                if (_colorBlocks[i] == colorBlockAsset)
+                    counter++;
+            }
+
+            return counter;
+        }
+
         public int GetObjectiveBlockIndex(ObjectiveBlockAsset objectiveBlockAsset)
         {
             for (int i = 0; i < NumberOfObjectiveBlock; i++)
@@ -70,6 +83,19 @@ namespace Project.Data.PlayableArea
             }
 
             return -1;
+        }
+
+        public int GetNumberObjectiveBlock(ObjectiveBlockAsset objectiveBlockAsset)
+        {
+            int counter = 0;
+
+            for (int i = 0; i < NumberOfObjectiveBlock; i++)
+            {
+                if (_colorBlocks[i] == objectiveBlockAsset)
+                    counter++;
+            }
+
+            return counter;
         }
 
         #endregion

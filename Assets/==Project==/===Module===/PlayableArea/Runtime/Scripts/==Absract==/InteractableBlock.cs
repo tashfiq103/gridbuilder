@@ -7,10 +7,12 @@ namespace Project.Module.PlayableArea
     {
         #region Public Variables
 
+
         public int RowIndex { get; private set; }
         public int ColumnIndex { get; private set; }
         public int Index { get; private set; }
         public bool IsImpactByGravity { get; private set; }
+        public Sprite BlockImage { get; private set; }
 
         #endregion
 
@@ -74,6 +76,7 @@ namespace Project.Module.PlayableArea
         public void ChangeSprite(Sprite gridColorSprite)
         {
             _spriteRendererReference.sprite = gridColorSprite;
+            BlockImage = gridColorSprite;
         }
 
         public void Appear() {

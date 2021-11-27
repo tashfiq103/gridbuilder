@@ -48,7 +48,6 @@ namespace Project.Module.PlayableArea
 
         #region Public Variables
 
-        public event System.Action OnPassingRemainingNumberOfMove;
         public int RemainingNumberOfMove { get; private set; }
 
         #endregion
@@ -503,6 +502,20 @@ namespace Project.Module.PlayableArea
                 _listOfObjectiveBlock.Remove(objectiveBlock);
                 _listOfBlock[index] = null;
                 objectiveBlock.Disappear();
+
+                foreach (ObjectiveBlockAsset objectiveBlockAsset in _gridDataAssetForCurrentLevel.ObjectiveBlocks)
+                {
+                    if (objectiveBlockAsset.DefaulColorSprite == _listOfBlock[index].BlockImage)
+                    {
+                        int counter = 0;
+                        foreach (ObjectiveBlock remainingObjectiveBlock in _listOfObjectiveBlock)
+                        {
+                            if (remainingObjectiveBlock.BlockImage == objectiveBlockAsset.DefaulColorSprite)
+                                counter++;
+                        }
+                        _gameManager.GridDataManagerReference.PassRemainingNumberOfObjective(objectiveBlockAsset, counter);
+                    }
+                }
             }
         }
 
@@ -560,6 +573,7 @@ namespace Project.Module.PlayableArea
                 if (_colorBlockMapingForPossibleSolution.TryGetValue(colorBlock, out solutionIndex))
                 {
                     RemainingNumberOfMove--;
+                    _gameManager.GridDataManagerReference.PassRemainingNumberOfMove(RemainingNumberOfMove);
 
                     _userInputOnColorGrid.SetInputStatus(false);
                     OnTouchedSolution(_listOfPossibleSolutionForColorBlock[solutionIndex]);

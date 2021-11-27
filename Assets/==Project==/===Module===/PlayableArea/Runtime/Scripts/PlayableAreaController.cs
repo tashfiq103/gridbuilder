@@ -18,17 +18,25 @@ namespace Project.Module.PlayableArea
         {
             base.OnLevelStarted();
 
-            int levelIndex = _gameManager.LevelDataManagerReference.GetLevelIndex;
-            _gridDataAssetForCurrentLevel = _gameManager.GridDataManagerReference.GridsData[levelIndex];
+            int levelIndex                  = _gameManager.LevelDataManagerReference.GetLevelIndex;
+            _gridDataAssetForCurrentLevel   = _gameManager.GridDataManagerReference.GridsData[levelIndex];
+            RemainingNumberOfMove           = _gridDataAssetForCurrentLevel.NumberOfAvailableMove;
 
             FillTheWholeGridFromLayout();
 
             _userInputOnColorGrid.Initialize(OnRecievingTheTouchedColorGrid);
         }
 
-        protected override void OnLevelEnded()
+        protected override void OnLevelCompleted()
         {
-            base.OnLevelEnded();
+            base.OnLevelCompleted();
+
+            _userInputOnColorGrid.RestoreToDefault();
+        }
+
+        protected override void OnLevelFailed()
+        {
+            base.OnLevelFailed();
 
             _userInputOnColorGrid.RestoreToDefault();
         }
@@ -38,6 +46,13 @@ namespace Project.Module.PlayableArea
         //=================================
         #region ALL SELF DECLEAR FUNCTIONS
 
+        #region Public Variables
+
+        public event System.Action OnPassingRemainingNumberOfMove;
+        public int RemainingNumberOfMove { get; private set; }
+
+        #endregion
+
         #region Private Variables
 
         [Header("Reference  :   External")]
@@ -46,18 +61,17 @@ namespace Project.Module.PlayableArea
         [SerializeField] private GameObject _objectiveBlockPrefab;
 
 
-        private GridDataAsset               _gridDataAssetForCurrentLevel;
-
-        [SerializeField] private List<InteractableBlock> _listOfBlock;
+        private GridDataAsset                           _gridDataAssetForCurrentLevel;
+        private List<InteractableBlock>                 _listOfBlock;
 
         //ColorBlock
-        [SerializeField] private List<ColorBlock>            _listOfColorBlock;
-
-        private Dictionary<ColorBlock, int> _gridMapingForPossibleSolution;
-        private List<List<ColorBlock>>      _listOfSolution;
+        private List<ColorBlock>                        _listOfColorBlock;
+        private List<List<ColorBlock>>                  _listOfPossibleSolutionForColorBlock;
+        private Dictionary<ColorBlock, int>             _colorBlockMapingForPossibleSolution;
+        
 
         //ObjectiveBlock
-        [SerializeField] private List<ObjectiveBlock> _listOfObjectiveBlock;
+        [SerializeField] private List<ObjectiveBlock>   _listOfObjectiveBlock;
 
         #endregion
 
@@ -276,8 +290,8 @@ namespace Project.Module.PlayableArea
 
         private void CreateListOfPossibleSolution()
         {
-            _gridMapingForPossibleSolution  = new Dictionary<ColorBlock, int>();
-            _listOfSolution = new List<List<ColorBlock>>();
+            _colorBlockMapingForPossibleSolution  = new Dictionary<ColorBlock, int>();
+            _listOfPossibleSolutionForColorBlock = new List<List<ColorBlock>>();
 
             int row = _gridDataAssetForCurrentLevel.Row;
             int column = _gridDataAssetForCurrentLevel.Column;
@@ -334,8 +348,8 @@ namespace Project.Module.PlayableArea
                     int currentIndexOnSolutionList = -1;
                     int nextIndexOnSolutionList = -1;
 
-                    bool isCurrentValueFound = _gridMapingForPossibleSolution.TryGetValue(currentColorBlock, out currentIndexOnSolutionList);
-                    bool IsNextValueFound = _gridMapingForPossibleSolution.TryGetValue(nextColorBlock, out nextIndexOnSolutionList);
+                    bool isCurrentValueFound = _colorBlockMapingForPossibleSolution.TryGetValue(currentColorBlock, out currentIndexOnSolutionList);
+                    bool IsNextValueFound = _colorBlockMapingForPossibleSolution.TryGetValue(nextColorBlock, out nextIndexOnSolutionList);
 
                     if (!IsNextValueFound)
                     {
@@ -344,15 +358,15 @@ namespace Project.Module.PlayableArea
                         {
                             //if : Current is also not in any group
 
-                            currentIndexOnSolutionList = _listOfSolution.Count;
-                            _listOfSolution.Add(new List<ColorBlock>());
-                            _listOfSolution[currentIndexOnSolutionList] = new List<ColorBlock>();
-                            _listOfSolution[currentIndexOnSolutionList].Add(currentColorBlock);
-                            _gridMapingForPossibleSolution.Add(currentColorBlock, currentIndexOnSolutionList);
+                            currentIndexOnSolutionList = _listOfPossibleSolutionForColorBlock.Count;
+                            _listOfPossibleSolutionForColorBlock.Add(new List<ColorBlock>());
+                            _listOfPossibleSolutionForColorBlock[currentIndexOnSolutionList] = new List<ColorBlock>();
+                            _listOfPossibleSolutionForColorBlock[currentIndexOnSolutionList].Add(currentColorBlock);
+                            _colorBlockMapingForPossibleSolution.Add(currentColorBlock, currentIndexOnSolutionList);
                         }
 
-                        _listOfSolution[currentIndexOnSolutionList].Add(nextColorBlock);
-                        _gridMapingForPossibleSolution.Add(nextColorBlock, currentIndexOnSolutionList);
+                        _listOfPossibleSolutionForColorBlock[currentIndexOnSolutionList].Add(nextColorBlock);
+                        _colorBlockMapingForPossibleSolution.Add(nextColorBlock, currentIndexOnSolutionList);
                     }
                     else
                     {
@@ -360,8 +374,8 @@ namespace Project.Module.PlayableArea
                         if (!isCurrentValueFound)
                         {
                             //if : Next is in group but current is not in group
-                            _listOfSolution[nextIndexOnSolutionList].Add(currentColorBlock);
-                            _gridMapingForPossibleSolution.Add(currentColorBlock, nextIndexOnSolutionList);
+                            _listOfPossibleSolutionForColorBlock[nextIndexOnSolutionList].Add(currentColorBlock);
+                            _colorBlockMapingForPossibleSolution.Add(currentColorBlock, nextIndexOnSolutionList);
                         }
                         else
                         {
@@ -370,16 +384,16 @@ namespace Project.Module.PlayableArea
 
                             if (currentIndexOnSolutionList != nextIndexOnSolutionList)
                             {
-                                int sizeOfOfCurrentSolution = _listOfSolution[currentIndexOnSolutionList].Count;
+                                int sizeOfOfCurrentSolution = _listOfPossibleSolutionForColorBlock[currentIndexOnSolutionList].Count;
 
                                 for (int i = 0; i < sizeOfOfCurrentSolution; i++)
                                 {
-                                    _listOfSolution[nextIndexOnSolutionList].Add(_listOfSolution[currentIndexOnSolutionList][i]);
-                                    _gridMapingForPossibleSolution.Remove(_listOfSolution[currentIndexOnSolutionList][i]);
-                                    _gridMapingForPossibleSolution.Add(_listOfSolution[currentIndexOnSolutionList][i], nextIndexOnSolutionList);
+                                    _listOfPossibleSolutionForColorBlock[nextIndexOnSolutionList].Add(_listOfPossibleSolutionForColorBlock[currentIndexOnSolutionList][i]);
+                                    _colorBlockMapingForPossibleSolution.Remove(_listOfPossibleSolutionForColorBlock[currentIndexOnSolutionList][i]);
+                                    _colorBlockMapingForPossibleSolution.Add(_listOfPossibleSolutionForColorBlock[currentIndexOnSolutionList][i], nextIndexOnSolutionList);
                                 }
 
-                                _listOfSolution[currentIndexOnSolutionList].Clear();
+                                _listOfPossibleSolutionForColorBlock[currentIndexOnSolutionList].Clear();
                             }
                         }
                     }
@@ -389,14 +403,14 @@ namespace Project.Module.PlayableArea
 
         private void ColorTheGroup()
         {
-            int numberOfSolutionList = _listOfSolution.Count;
+            int numberOfSolutionList = _listOfPossibleSolutionForColorBlock.Count;
             for (int i = 0; i < numberOfSolutionList; i++)
             {
-                int sizeOfGroup         = _listOfSolution[i].Count;
+                int sizeOfGroup         = _listOfPossibleSolutionForColorBlock[i].Count;
 
                 if (sizeOfGroup > 0)
                 {
-                    int colorIndex = _listOfSolution[i][0].ColorIndex;
+                    int colorIndex = _listOfPossibleSolutionForColorBlock[i][0].ColorIndex;
 
                     int colorSpriteIndex = -1;
                     Sprite colorOfGrid = _gridDataAssetForCurrentLevel.ColorBlocks[colorIndex].DefaulColorSprite;
@@ -414,7 +428,7 @@ namespace Project.Module.PlayableArea
 
                     for (int j = 0; j < sizeOfGroup; j++)
                     {
-                        _listOfSolution[i][j].ChangeSprite(colorOfGrid);
+                        _listOfPossibleSolutionForColorBlock[i][j].ChangeSprite(colorOfGrid);
                     }
                 }
             }
@@ -543,10 +557,12 @@ namespace Project.Module.PlayableArea
             {
                 Debug.Log(string.Format("Touched : ColorBlock = {0}", colorBlock.name));
                 int solutionIndex = -1;
-                if (_gridMapingForPossibleSolution.TryGetValue(colorBlock, out solutionIndex))
+                if (_colorBlockMapingForPossibleSolution.TryGetValue(colorBlock, out solutionIndex))
                 {
+                    RemainingNumberOfMove--;
+
                     _userInputOnColorGrid.SetInputStatus(false);
-                    OnTouchedSolution(_listOfSolution[solutionIndex]);
+                    OnTouchedSolution(_listOfPossibleSolutionForColorBlock[solutionIndex]);
                     RefillTheGrid();
 
                     while (CheckIfDeadlockCondition())

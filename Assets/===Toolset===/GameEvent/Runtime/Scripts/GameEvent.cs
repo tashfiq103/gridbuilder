@@ -19,24 +19,16 @@ namespace Toolset.GameEvent
             #region Public Variables
 
             public GameEventListener GameEventListenerReference { get; private set; }
-            public Action GameEventResponseReference { get; private set; }
+            public Action GameActionReference { get; private set; }
 
             #endregion
 
             #region Public Callback
 
-            public bool IsSameGameEventListener(GameEventListener gameEventListener)
-            {
-                if (GameEventListenerReference == gameEventListener)
-                    return true;
-
-                return false;
-            }
-
-            public GameEventResponse(GameEventListener gameEventListener, Action gameEventResponse)
+            public GameEventResponse(GameEventListener gameEventListener, Action gameAction)
             {
                 GameEventListenerReference = gameEventListener;
-                GameEventResponseReference = gameEventResponse;
+                GameActionReference = gameAction;
             }
 
             #endregion
@@ -47,37 +39,48 @@ namespace Toolset.GameEvent
 
         #region Private Variables
 
-        private List<GameEventResponse> _listOfGameEventResponse                                = new List<GameEventResponse>();
-        private Dictionary<GameEventListener, GameEventResponse> _trackerForGameEventListener   = new Dictionary<GameEventListener, GameEventResponse>();
-        
+        private List<GameEventResponse> _listOfGameEventResponse = new List<GameEventResponse>();
+
 
         #endregion
 
+        #region Configuretion
+
+        private int IsDuplicationAction(GameEventListener gameEventListener, Action gameAction)
+        {
+            int numberOfResponse = _listOfGameEventResponse.Count;
+            for (int i = 0; i < numberOfResponse; i++)
+            {
+                if (gameEventListener == _listOfGameEventResponse[i].GameEventListenerReference
+                && gameAction == _listOfGameEventResponse[i].GameActionReference)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        #endregion
 
         #region Public Callback
 
-        public void RegisterEvent(GameEventListener gameEventListener, Action gameEventResponse)
+        public void RegisterEvent(GameEventListener gameEventListener, Action gameAction)
         {
-            if (!_trackerForGameEventListener.ContainsKey(gameEventListener))
+            if (IsDuplicationAction(gameEventListener, gameAction) == -1)
             {
-                GameEventResponse newGameEventResponse = new GameEventResponse(gameEventListener, gameEventResponse);
-
+                GameEventResponse newGameEventResponse = new GameEventResponse(gameEventListener, gameAction);
                 _listOfGameEventResponse.Add(newGameEventResponse);
-                _trackerForGameEventListener.Add(gameEventListener, newGameEventResponse);
             }
 
         }
 
-        public void UnregisterEvent(GameEventListener gameEventListener)
+        public void UnregisterEvent(GameEventListener gameEventListener, Action gameAction)
         {
-            if (_trackerForGameEventListener.ContainsKey(gameEventListener))
+            int index = IsDuplicationAction(gameEventListener, gameAction);
+            if (index != -1)
             {
-                GameEventResponse removingGameEventResponse;
-                if (_trackerForGameEventListener.TryGetValue(gameEventListener, out removingGameEventResponse)) {
-
-                    _listOfGameEventResponse.Remove(removingGameEventResponse);
-                    _trackerForGameEventListener.Remove(gameEventListener);
-                }
+                _listOfGameEventResponse.RemoveAt(index);
+                _listOfGameEventResponse.TrimExcess();
             }
         }
 
@@ -85,7 +88,7 @@ namespace Toolset.GameEvent
 
             int numberOfEvent = _listOfGameEventResponse.Count;
             for (int i = numberOfEvent - 1; i >= 0; i--)
-                _listOfGameEventResponse[i].GameEventResponseReference?.Invoke();
+                _listOfGameEventResponse[i].GameActionReference?.Invoke();
         }
 
         #endregion

@@ -27,9 +27,6 @@ namespace Project.Shared
         public GameEvent OnLevelStartedEvent { get { return _OnLevelStartedEvent; } }
         public GameEvent OnLevelCompleteEvent { get { return _OnLevelCompleteEvent; } }
         public GameEvent OnLevelFailedEvent { get { return _OnLevelFailedEvent; } }
-        public GameEvent OnRequestingToShowBonusLevelPopUpEvent { get { return _OnRequestingToShowBonusLevelPopUpEvent; } }
-        public GameEvent OnShowingCharacterUnlockPopUpEvent { get { return _OnShowingCharacterUnlockPopUpEvent; } }
-        public GameEvent OnShowingCharacterSkinShopEvent { get { return _OnShowingCharacterSkinShopEvent; } }
 
         #endregion
 
@@ -46,9 +43,6 @@ namespace Project.Shared
         [SerializeField] private GameEvent _OnLevelStartedEvent;
         [SerializeField] private GameEvent _OnLevelCompleteEvent;
         [SerializeField] private GameEvent _OnLevelFailedEvent;
-        [SerializeField] private GameEvent _OnRequestingToShowBonusLevelPopUpEvent;
-        [SerializeField] private GameEvent _OnShowingCharacterUnlockPopUpEvent;
-        [SerializeField] private GameEvent _OnShowingCharacterSkinShopEvent;
 
         #endregion
 

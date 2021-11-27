@@ -15,13 +15,13 @@ namespace Project.UI
 
         protected virtual void Awake()
         {
-            OnEnabledEvent  += OnCavasDisabled;
+            OnEnabledEvent  += OnCanvasEnabled;
             OnDisabledEvent += OnCavasDisabled;
         }
 
         protected virtual void OnDestroy()
         {
-            OnEnabledEvent  -= OnCavasDisabled;
+            OnEnabledEvent  -= OnCanvasEnabled;
             OnDisabledEvent -= OnCavasDisabled;
         }
 

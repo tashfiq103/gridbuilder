@@ -10,24 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9da2e6287d3194a6a973bbd17ac9b218, type: 3}
-  m_Name: GridDataAsset 1
+  m_Name: Level2 - Grid
   m_EditorClassIdentifier: 
   _name: 
-  _gridBuildOption: 0
-  _selectedInteractableBlockIndex: 1
-  _selectedInteractableBlock: {fileID: 11400000, guid: bafbe38ff9e1c41efa3a149f7ccb4eb7, type: 2}
+  _gridBuildOption: 1
+  _selectedInteractableBlockIndex: 2
+  _selectedInteractableBlock: {fileID: 11400000, guid: 499b218d938864bfcafb7b852cf2823d, type: 2}
   _showGridNumber: 1
   _row: 6
   _column: 2
   _numberOfAvailableMove: 3
   _objectiveBlocks:
   - {fileID: 11400000, guid: 499b218d938864bfcafb7b852cf2823d, type: 2}
-  - {fileID: 11400000, guid: 0925afa1b9206434a8c52d7c7ae44d28, type: 2}
   _colorBlocks:
   - {fileID: 11400000, guid: cda98570e76d946fd8b54c73e269184b, type: 2}
   - {fileID: 11400000, guid: bafbe38ff9e1c41efa3a149f7ccb4eb7, type: 2}
   _gridLayout:
-  - {fileID: 11400000, guid: 0925afa1b9206434a8c52d7c7ae44d28, type: 2}
+  - {fileID: 11400000, guid: 499b218d938864bfcafb7b852cf2823d, type: 2}
   - {fileID: 11400000, guid: cda98570e76d946fd8b54c73e269184b, type: 2}
   - {fileID: 11400000, guid: cda98570e76d946fd8b54c73e269184b, type: 2}
   - {fileID: 11400000, guid: bafbe38ff9e1c41efa3a149f7ccb4eb7, type: 2}
@@ -35,7 +34,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bafbe38ff9e1c41efa3a149f7ccb4eb7, type: 2}
   - {fileID: 11400000, guid: bafbe38ff9e1c41efa3a149f7ccb4eb7, type: 2}
   - {fileID: 11400000, guid: cda98570e76d946fd8b54c73e269184b, type: 2}
-  - {fileID: 11400000, guid: 0925afa1b9206434a8c52d7c7ae44d28, type: 2}
+  - {fileID: 11400000, guid: 499b218d938864bfcafb7b852cf2823d, type: 2}
   - {fileID: 11400000, guid: cda98570e76d946fd8b54c73e269184b, type: 2}
   - {fileID: 11400000, guid: bafbe38ff9e1c41efa3a149f7ccb4eb7, type: 2}
-  - {fileID: 11400000, guid: 0925afa1b9206434a8c52d7c7ae44d28, type: 2}
+  - {fileID: 11400000, guid: 499b218d938864bfcafb7b852cf2823d, type: 2}

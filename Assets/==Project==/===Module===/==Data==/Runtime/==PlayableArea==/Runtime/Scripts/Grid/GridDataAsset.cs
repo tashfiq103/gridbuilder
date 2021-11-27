@@ -34,8 +34,8 @@ namespace Project.Data.PlayableArea
 
 #endif
 
-        [SerializeField, Range(1,10)]   private int _row = 2;
-        [SerializeField, Range(1,10)]  private int _column = 2;
+        [SerializeField, Range(2,10)]   private int _row = 2;
+        [SerializeField, Range(2,10)]  private int _column = 2;
         [SerializeField] private int _numberOfAvailableMove = 2;
         [SerializeField] private List<ObjectiveBlockAsset> _objectiveBlocks;
         [SerializeField] private List<ColorBlockAsset> _colorBlocks;
@@ -88,12 +88,24 @@ namespace Project.Data.PlayableArea
         public int GetNumberObjectiveBlock(ObjectiveBlockAsset objectiveBlockAsset)
         {
             int counter = 0;
-
-            for (int i = 0; i < NumberOfObjectiveBlock; i++)
+            int numberOfBlock = _gridLayout.Count;
+            
+            for (int i = 0; i < numberOfBlock; i++)
             {
-                if (_colorBlocks[i] == objectiveBlockAsset)
-                    counter++;
+                if (_gridLayout[i].GetType() == typeof(ObjectiveBlockAsset))
+                {
+                    ObjectiveBlockAsset refObjectiveBlockAsset = (ObjectiveBlockAsset)System.Convert.ChangeType(_gridLayout[i], _gridLayout[i].GetType());
+                    if (refObjectiveBlockAsset != null)
+                    {
+                        if (refObjectiveBlockAsset == objectiveBlockAsset)
+                        {
+                            counter++;
+                        }
+                    }
+                }
             }
+
+            Debug.Log(counter);
 
             return counter;
         }

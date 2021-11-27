@@ -499,10 +499,6 @@ namespace Project.Module.PlayableArea
             ObjectiveBlock objectiveBlock = null;
             if (_listOfBlock[index] != null && _listOfBlock[index].TryGetComponent<ObjectiveBlock>(out objectiveBlock))
             {
-                _listOfObjectiveBlock.Remove(objectiveBlock);
-                _listOfBlock[index] = null;
-                objectiveBlock.Disappear();
-
                 foreach (ObjectiveBlockAsset objectiveBlockAsset in _gridDataAssetForCurrentLevel.ObjectiveBlocks)
                 {
                     if (objectiveBlockAsset.DefaulColorSprite == _listOfBlock[index].BlockImage)
@@ -513,9 +509,15 @@ namespace Project.Module.PlayableArea
                             if (remainingObjectiveBlock.BlockImage == objectiveBlockAsset.DefaulColorSprite)
                                 counter++;
                         }
-                        _gameManager.GridDataManagerReference.PassRemainingNumberOfObjective(objectiveBlockAsset, counter);
+                        _gameManager.GridDataManagerReference.PassRemainingNumberOfObjective(objectiveBlockAsset, counter - 1);
                     }
                 }
+
+                _listOfObjectiveBlock.Remove(objectiveBlock);
+                _listOfBlock[index] = null;
+                objectiveBlock.Disappear();
+
+                
             }
         }
 

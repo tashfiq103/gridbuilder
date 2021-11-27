@@ -86,6 +86,11 @@ namespace Project.Shared
         public void LoadNextLevel()
         {
             LevelDataManagerReference.UpdateLevelProgressionDataOnLevelComplete();
+            RestartLevel();
+        }
+
+        public void RestartLevel()
+        {
             int levelIndex = LevelDataManagerReference.GetLevelIndex;
             LoadLevel(
                     LevelDataManagerReference.LevelInformationReference[levelIndex].LevelScene

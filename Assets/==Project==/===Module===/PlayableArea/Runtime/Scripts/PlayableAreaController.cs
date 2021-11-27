@@ -62,7 +62,7 @@ namespace Project.Module.PlayableArea
 
 
         private GridDataAsset                           _gridDataAssetForCurrentLevel;
-        [SerializeField]private List<InteractableBlock>                 _listOfBlock;
+        private List<InteractableBlock>                 _listOfBlock;
 
         //ColorBlock
         private List<ColorBlock>                        _listOfColorBlock;
@@ -575,11 +575,10 @@ namespace Project.Module.PlayableArea
                 _listOfBlock[index] = null;
                 objectiveBlock.Disappear();
 
-                
             }
         }
 
-        private void OnTouchedSolution(List<ColorBlock> listOfSolution)
+        private void OnTouchedSolution(InteractableBlock touchedBlock, List<ColorBlock> listOfSolution)
         {
             int sizeOfSolution = listOfSolution.Count;
             int row = _gridDataAssetForCurrentLevel.Row;
@@ -616,17 +615,23 @@ namespace Project.Module.PlayableArea
                     TryToGetObjectiveBlock(previousColumn);
                 }
 
+                if (touchedBlock != listOfSolution[i])
+                {
+                    listOfSolution[i].transform.DOLocalMove(touchedBlock.transform.localPosition, 0.25f);
+
+                }
+
                 listOfSolution[i].Disappear();
                 _listOfBlock[index] = null;
             }
 
         }
 
-        private void OnRecievingTheTouchedColorGrid(InteractableBlock touchedGrid)
+        private void OnRecievingTheTouchedColorGrid(InteractableBlock touchedBlock)
         {
 
             ColorBlock colorBlock;
-            if (touchedGrid.TryGetComponent<ColorBlock>(out colorBlock))
+            if (touchedBlock.TryGetComponent<ColorBlock>(out colorBlock))
             {
                 Debug.Log(string.Format("Touched : ColorBlock = {0}", colorBlock.name));
                 int solutionIndex = -1;
@@ -636,7 +641,7 @@ namespace Project.Module.PlayableArea
                     _gameManager.GridDataManagerReference.PassRemainingNumberOfMove(RemainingNumberOfMove);
 
                     _userInputOnColorGrid.SetInputStatus(false);
-                    OnTouchedSolution(_listOfPossibleSolutionForColorBlock[solutionIndex]);
+                    OnTouchedSolution(touchedBlock, _listOfPossibleSolutionForColorBlock[solutionIndex]);
 
                     if (_listOfObjectiveBlock.Count <= 0)
                     {

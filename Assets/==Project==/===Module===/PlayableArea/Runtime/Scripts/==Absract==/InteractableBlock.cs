@@ -87,7 +87,7 @@ namespace Project.Module.PlayableArea
 
         public void Disappear()
         {
-            transform.DOScale(0, 0.5f);
+            transform.DOScale(0, 0.5f).SetEase(Ease.InSine);
             DOVirtual.DelayedCall(
                     0.5f,
                     () =>

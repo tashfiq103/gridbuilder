@@ -136,37 +136,6 @@ namespace Project.Module.PlayableArea
             return isDeadLock;
         }
 
-        private ColorBlock FillTheGridWithColorBlock(int i, int j, int index)
-        {
-            int row = _gridDataAssetForCurrentLevel.Row;
-            int column = _gridDataAssetForCurrentLevel.Column;
-
-            float x = (-(column / 2.0f) + 0.5f) + Mathf.Lerp(0, column, ((float)j) / column);
-            float y = (-(row / 2.0f) + 0.5f) + Mathf.Lerp(0, row, ((float)i) / row);
-
-            int gridColorIndex = Random.Range(0, _gridDataAssetForCurrentLevel.NumberOfColorBlock);
-            ColorBlock colorBlock = Instantiate(_colorBlockPrefab, transform).GetComponent<ColorBlock>();
-            colorBlock.transform.localPosition = new Vector3(x, row + 0.5f, 0);
-            colorBlock.Initialize(
-                i,
-                j,
-                index,
-                _gridDataAssetForCurrentLevel.ColorBlocks[gridColorIndex].Gravity,
-                _gridDataAssetForCurrentLevel.ColorBlocks[gridColorIndex].DefaulColorSprite,
-                new Vector3(x, y, 0));
-            colorBlock.SetColorIndex(gridColorIndex);
-            _listOfColorBlock.Add(colorBlock);
-            _listOfBlock.Add(colorBlock);
-#if UNITY_EDITOR
-            colorBlock.gameObject.name = string.Format(
-                "Block[{0},{1}]_Index({2}))",
-                i,
-                j,
-                index);
-#endif
-            return colorBlock;
-        }
-
         private void FillTheWholeGridFromLayout()
         {
             do
@@ -488,7 +457,7 @@ namespace Project.Module.PlayableArea
                                         _listOfBlock[indexInNextRow]= null;
 
                                         _listOfBlock[index].UpdateGridInfo(
-                                                k,
+                                                i,
                                                 j,
                                                 index
                                             );

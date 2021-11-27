@@ -18,7 +18,15 @@ namespace Project.Module.PlayableArea
 
         [SerializeField] private SpriteRenderer _spriteRendererReference;
 
-        #endregion
+#if UNITY_EDITOR
+
+        [SerializeField] private int rowIndex;
+        [SerializeField] private int columnIndex;
+        [SerializeField] private int index;
+
+#endif
+
+#endregion
 
         #region Abstract Method
 
@@ -30,6 +38,7 @@ namespace Project.Module.PlayableArea
 
         public void Initialize(int row, int column, int index, bool gravity, Sprite sprite, Vector3 localPosition)
         {
+
             UpdateGridInfo(row, column, index);
 
             IsImpactByGravity = gravity;
@@ -46,6 +55,14 @@ namespace Project.Module.PlayableArea
 
         public void UpdateGridInfo(int row, int column, int index)
         {
+#if UNITY_EDITOR
+
+            rowIndex = row;
+            columnIndex = column;
+            this.index = index;
+
+#endif
+
             RowIndex = row;
             ColumnIndex = column;
             Index = index;

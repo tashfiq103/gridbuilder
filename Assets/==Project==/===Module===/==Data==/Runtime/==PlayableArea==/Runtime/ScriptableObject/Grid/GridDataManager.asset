@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: GridDataManager
   m_EditorClassIdentifier: 
   _listOfGridData:
-  - {fileID: 11400000, guid: 8d31f8f20b2024d788c8187897a8f356, type: 2}
+  - {fileID: 11400000, guid: 59feb25ce6ab74fc7a78ac9cf56f2709, type: 2}

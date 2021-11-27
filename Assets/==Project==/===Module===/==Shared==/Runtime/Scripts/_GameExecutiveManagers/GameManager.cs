@@ -25,7 +25,8 @@ namespace Project.Shared
         public GameEvent OnDataLoadedEvent { get { return _OnDataLoadedEvent; } }
         public GameEvent OnSceneLoadedEvent { get { return _OnSceneLoadedEvent; } }
         public GameEvent OnLevelStartedEvent { get { return _OnLevelStartedEvent; } }
-        public GameEvent OnLevelEndedEvent { get { return _OnLevelEndedEvent; } }
+        public GameEvent OnLevelCompleteEvent { get { return _OnLevelCompleteEvent; } }
+        public GameEvent OnLevelFailedEvent { get { return _OnLevelFailedEvent; } }
         public GameEvent OnRequestingToShowBonusLevelPopUpEvent { get { return _OnRequestingToShowBonusLevelPopUpEvent; } }
         public GameEvent OnShowingCharacterUnlockPopUpEvent { get { return _OnShowingCharacterUnlockPopUpEvent; } }
         public GameEvent OnShowingCharacterSkinShopEvent { get { return _OnShowingCharacterSkinShopEvent; } }
@@ -43,7 +44,8 @@ namespace Project.Shared
         [SerializeField] private GameEvent _OnDataLoadedEvent;
         [SerializeField] private GameEvent _OnSceneLoadedEvent;
         [SerializeField] private GameEvent _OnLevelStartedEvent;
-        [SerializeField] private GameEvent _OnLevelEndedEvent;
+        [SerializeField] private GameEvent _OnLevelCompleteEvent;
+        [SerializeField] private GameEvent _OnLevelFailedEvent;
         [SerializeField] private GameEvent _OnRequestingToShowBonusLevelPopUpEvent;
         [SerializeField] private GameEvent _OnShowingCharacterUnlockPopUpEvent;
         [SerializeField] private GameEvent _OnShowingCharacterSkinShopEvent;

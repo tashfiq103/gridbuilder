@@ -15,6 +15,7 @@ namespace Project.Data.PlayableArea
         public int NumberOfObjectiveBlock { get { return _objectiveBlocks.Count; } }
         public int Row { get { return _row; } }
         public int Column { get { return _column; } }
+        public int NumberOfAvailableMove { get { return _numberOfAvailableMove; } }
         public List<ObjectiveBlockAsset> ObjectiveBlocks { get { return _objectiveBlocks; } }
         public List<ColorBlockAsset> ColorBlocks { get { return _colorBlocks; } }
         public List<Object> GridLayout { get { return _gridLayout; } }
@@ -35,6 +36,7 @@ namespace Project.Data.PlayableArea
 
         [SerializeField, Range(1,10)]   private int _row = 2;
         [SerializeField, Range(1,10)]  private int _column = 2;
+        [SerializeField] private int _numberOfAvailableMove = 2;
         [SerializeField] private List<ObjectiveBlockAsset> _objectiveBlocks;
         [SerializeField] private List<ColorBlockAsset> _colorBlocks;
         [SerializeField] private List<Object> _gridLayout;

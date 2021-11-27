@@ -34,7 +34,7 @@ namespace Project.Shared
                 _gameManager.OnSceneLoadedEvent.RegisterEvent(this, OnSceneLoaded);
                 _gameManager.OnDataLoadedEvent.RegisterEvent(this, OnDataLoaded);
                 _gameManager.OnLevelStartedEvent.RegisterEvent(this, OnLevelStarted);
-                _gameManager.OnLevelEndedEvent.RegisterEvent(this, OnLevelEnded);
+                _gameManager.OnLevelCompleteEvent.RegisterEvent(this, OnLevelCompleted);
                 _gameManager.OnRequestingToShowBonusLevelPopUpEvent.RegisterEvent(this, OnRequestingToShowBonusLevelPopUp);
                 _gameManager.OnShowingCharacterUnlockPopUpEvent.RegisterEvent(this, OnShowingCharacterUnlockPopUp);
                 _gameManager.OnShowingCharacterSkinShopEvent.RegisterEvent(this, OnShowingCharacterSkinShop);
@@ -50,7 +50,7 @@ namespace Project.Shared
                 _gameManager.OnSceneLoadedEvent.UnregisterEvent(this);
                 _gameManager.OnDataLoadedEvent.UnregisterEvent(this);
                 _gameManager.OnLevelStartedEvent.UnregisterEvent(this);
-                _gameManager.OnLevelEndedEvent.UnregisterEvent(this);
+                _gameManager.OnLevelCompleteEvent.UnregisterEvent(this);
                 _gameManager.OnRequestingToShowBonusLevelPopUpEvent.UnregisterEvent(this);
                 _gameManager.OnShowingCharacterUnlockPopUpEvent.UnregisterEvent(this);
                 _gameManager.OnShowingCharacterSkinShopEvent.UnregisterEvent(this);
@@ -66,7 +66,7 @@ namespace Project.Shared
         protected virtual void OnSceneLoaded() { }
         protected virtual void OnDataLoaded() { }
         protected virtual void OnLevelStarted() { }
-        protected virtual void OnLevelEnded() { }
+        protected virtual void OnLevelCompleted() { }
         protected virtual void OnRequestingToShowBonusLevelPopUp() { }
         protected virtual void OnShowingCharacterUnlockPopUp() { }
         protected virtual void OnShowingCharacterSkinShop() { }

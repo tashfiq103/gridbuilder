@@ -21,6 +21,7 @@ namespace Project.Data.PlayableArea
         private SerializedProperty _name;
         private SerializedProperty _row;
         private SerializedProperty _column;
+        private SerializedProperty _numberOfAvailableMove;
         private SerializedProperty _objectiveBlocks;
         private SerializedProperty _colorBlocks;
         private SerializedProperty _gridLayout;
@@ -48,6 +49,7 @@ namespace Project.Data.PlayableArea
                     _gridLayout.arraySize = _row.intValue * _column.intValue;
                     _gridLayout.serializedObject.ApplyModifiedProperties();
                 }
+                EditorGUILayout.PropertyField(_numberOfAvailableMove);
             }
             EditorGUILayout.EndVertical();
 
@@ -328,6 +330,7 @@ namespace Project.Data.PlayableArea
             _name = serializedObject.FindProperty("_name");
             _row = serializedObject.FindProperty("_row");
             _column = serializedObject.FindProperty("_column");
+            _numberOfAvailableMove = serializedObject.FindProperty("_numberOfAvailableMove");
             _objectiveBlocks = serializedObject.FindProperty("_objectiveBlocks");
             _colorBlocks = serializedObject.FindProperty("_colorBlocks");
             _gridLayout = serializedObject.FindProperty("_gridLayout");

@@ -5,7 +5,7 @@ namespace Project.Module.PlayableArea
     using Project.Shared;
     using Project.Data.PlayableArea;
 
-    public class GridBuilderManager : GameBehaviour
+    public class PlayableAreaController : GameBehaviour
     {
         #region ALL UNITY FUNCTIONS
 

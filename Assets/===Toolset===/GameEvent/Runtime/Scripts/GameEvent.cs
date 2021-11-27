@@ -49,6 +49,7 @@ namespace Toolset.GameEvent
 
         private List<GameEventResponse> _listOfGameEventResponse                                = new List<GameEventResponse>();
         private Dictionary<GameEventListener, GameEventResponse> _trackerForGameEventListener   = new Dictionary<GameEventListener, GameEventResponse>();
+        
 
         #endregion
 

@@ -2,6 +2,7 @@ namespace Project.Data.LevelData
 {
     using UnityEngine;
     using UnityEngine.Events;
+    using Project.Data.PlayableArea;
     using com.faith.core;
 
 
@@ -15,6 +16,7 @@ namespace Project.Data.LevelData
         {
             public bool IsBonusLevel { get { return _levelDataAsset.IsBonusLevel; } }
             public SceneReference LevelScene { get { return _levelDataAsset.LevelScene; } }
+            public GridDataAsset GridData { get { return _levelDataAsset.GridData; } }
 
             [SerializeField] private LevelDataAsset _levelDataAsset;
         }

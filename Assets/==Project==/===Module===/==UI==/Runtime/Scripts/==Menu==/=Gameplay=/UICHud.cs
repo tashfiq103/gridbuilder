@@ -124,7 +124,7 @@ namespace Project.UI
 
             int levelIndex              = _gameManager.LevelDataManagerReference.GetLevelIndex;
             
-            _currentGridDataAsset       = _gameManager.GridDataManagerReference.GridsData[levelIndex];
+            _currentGridDataAsset       = _gameManager.LevelDataManagerReference.LevelInformationReference[levelIndex].GridData;
 
             OnUpdatingUIRemainingNumberOfMove(_currentGridDataAsset.NumberOfAvailableMove);
             _gameManager.GridDataManagerReference.OnPassingRemainingNumberOfMove += OnUpdatingUIRemainingNumberOfMove;

@@ -14,16 +14,9 @@ namespace Project.Data.PlayableArea
 
         public event Action<int>    OnPassingRemainingNumberOfMove;
         public event Action<ObjectiveBlockAsset, int> OnRemainingNumberOfObjective;
-        public List<GridDataAsset>  GridsData { get { return _listOfGridData; } }
 
         #endregion
 
-        #region Private Variables
-        
-        [Header("Array  :   GridData for Level")]
-        [SerializeField] private List<GridDataAsset> _listOfGridData;
-
-        #endregion
 
         #region Public Callback
 

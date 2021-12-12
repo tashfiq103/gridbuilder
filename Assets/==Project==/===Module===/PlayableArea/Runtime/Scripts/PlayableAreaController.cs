@@ -20,7 +20,7 @@ namespace Project.Module.PlayableArea
             base.OnLevelStarted();
 
             int levelIndex                  = _gameManager.LevelDataManagerReference.GetLevelIndex;
-            _gridDataAssetForCurrentLevel   = _gameManager.GridDataManagerReference.GridsData[levelIndex];
+            _gridDataAssetForCurrentLevel   = _gameManager.LevelDataManagerReference.LevelInformationReference[levelIndex].GridData;
             RemainingNumberOfMove           = _gridDataAssetForCurrentLevel.NumberOfAvailableMove;
 
             FillTheWholeGridFromLayout();
